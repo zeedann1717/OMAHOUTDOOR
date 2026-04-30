@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Daftar | Omah Outdoor</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            
+            <div class="auth-tabs">
+                <button id="tab-login" class="tab-btn active" onclick="switchForm('login')">Login</button>
+                <button id="tab-register" class="tab-btn" onclick="switchForm('register')">Daftar</button>
+            </div>
+
+            <div class="auth-header">
+                <a href="index.html" class="logo-back">🏕️ OMAH <span>OUTDOOR</span></a>
+                <h2 id="auth-title">Selamat Datang Kembali</h2>
+                <p id="auth-desc">Silakan masuk untuk mulai menyewa perlengkapan.</p>
+            </div>
+
+            <form id="form-login" class="auth-form">
+                <div class="input-group">
+                    <label for="email-login">Email</label>
+                    <input type="email" id="email-login" placeholder="Contoh: zidan@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="password-login">Password</label>
+                    <input type="password" id="password-login" placeholder="Masukkan password" required>
+                </div>
+                <div class="form-options">
+                    <label><input type="checkbox"> Ingat Saya</label>
+                    <a href="#">Lupa Password?</a>
+                </div>
+                <button type="submit" class="btn-auth">Masuk Sekarang</button>
+            </form>
+
+            <form id="form-register" class="auth-form hidden">
+                <div class="input-group">
+                    <label for="name-reg">Nama Lengkap</label>
+                    <input type="text" id="name-reg" placeholder="Nama sesuai KTP" required>
+                </div>
+                <div class="input-group">
+                    <label for="email-reg">Email</label>
+                    <input type="email" id="email-reg" placeholder="zidan@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="phone-reg">Nomor WhatsApp</label>
+                    <input type="tel" id="phone-reg" placeholder="0812xxxx" required>
+                </div>
+                <div class="input-group">
+                    <label for="password-reg">Password Baru</label>
+                    <input type="password" id="password-reg" placeholder="Minimal 8 karakter" required>
+                </div>
+                <button type="submit" class="btn-auth btn-register">Buat Akun</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Kembali ke <a href="index.html">Beranda</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchForm(type) {
+            const loginForm = document.getElementById('form-login');
+            const regForm = document.getElementById('form-register');
+            const loginTab = document.getElementById('tab-login');
+            const regTab = document.getElementById('tab-register');
+            const title = document.getElementById('auth-title');
+            const desc = document.getElementById('auth-desc');
+
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                loginTab.classList.add('active');
+                regTab.classList.remove('active');
+                title.innerText = "Selamat Datang Kembali";
+                desc.innerText = "Silakan masuk untuk mulai menyewa perlengkapan.";
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                loginTab.classList.remove('active');
+                regTab.classList.add('active');
+                title.innerText = "Gabung Omah Outdoor";
+                desc.innerText = "Daftar sekarang untuk kemudahan booking alat.";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+/* --- RESET & VARIABLES --- */
+:root {
+    --primary-blue: #1e3a8a;
+    --secondary-blue: #3b82f6;
+    --accent-orange: #f97316;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; 
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    line-height: 1.6;
+}
+
+h1, h2, h3, .logo {
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--primary-blue);
+}
+
+.logo span {
+    color: var(--accent-orange);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-blue);
+}
+
+.btn-login {
+    background-color: var(--primary-blue);
+    color: var(--white) !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: var(--secondary-blue);
+}
+
+/* --- HERO SECTION --- */
+.hero {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #172554 100%);
+    color: var(--white);
+    padding: 120px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero p {
+    font-size: 18px;
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    color: #cbd5e1;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--accent-orange);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: #172554;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+}
+
+.btn-secondary:hover {
+    background-color: var(--white);
+    color: var(--primary-blue);
+}
+
+/* --- FEATURES / SOLUSI --- */
+.features {
+    padding: 80px 0;
+    background-color: var(--white);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 32px;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.section-title p {
+    color: var(--text-light);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: var(--bg-light);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: var(--secondary-blue);
+}
+
+.feature-card .icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--primary-blue);
+}
+
+.feature-card p {
+    color: var(--text-light);
+    font-size: 15px;
+}
+
+/* --- CATALOG SECTION --- */
+.catalog {
+    padding: 80px 0;
+    background-color: var(--bg-light);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+}
+
+.product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #22c55e;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.product-badge.busy {
+    background: #ef4444;
+}
+
+.product-img {
+    height: 200px;
+    background-color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-info h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--primary-blue);
+}
+
+.product-info .price {
+    font-weight: 700;
+    color: var(--accent-orange);
+    margin-bottom: 20px;
+}
+
+.btn-check {
+    display: block;
+    text-align: center;
+    background: var(--primary-blue);
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-check:hover {
+    background: var(--secondary-blue);
+}
+
+/* --- FOOTER --- */
+.footer {
+    background-color: #0f172a;
+    color: var(--white);
+    padding: 60px 0 20px 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-brand {
+    max-width: 400px;
+}
+
+.footer-brand h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--accent-orange);
+}
+
+.footer-brand p {
+    color: #94a3b8;
+}
+
+.footer-team h4 {
+    margin-bottom: 15px;
+    color: var(--secondary-blue);
+}
+
+.footer-team ul {
+    list-style: none;
+    color: #cbd5e1;
+}
+
+.footer-team ul li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 15px;
+}
+
+.footer-team ul li::before {
+    content: "•";
+    color: var(--accent-orange);
+    position: absolute;
+    left: 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #1e293b;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* --- RESPONSIVE DESIGN (HP) --- */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; 
+    }
+    
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+    }
+}

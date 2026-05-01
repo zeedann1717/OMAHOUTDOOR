@@ -23,14 +23,15 @@
                 <p id="auth-desc">Silakan masuk untuk mulai menyewa perlengkapan.</p>
             </div>
 
-            <form id="form-login" class="auth-form">
+            <!-- FORM LOGIN: Nyambung ke proses_login.php -->
+            <form id="form-login" class="auth-form" action="proses_login.php" method="POST">
                 <div class="input-group">
                     <label for="email-login">Email</label>
-                    <input type="email" id="email-login" placeholder="Contoh: zidan@email.com" required>
+                    <input type="email" id="email-login" name="email" placeholder="Contoh: 123@email.com" required>
                 </div>
                 <div class="input-group">
                     <label for="password-login">Password</label>
-                    <input type="password" id="password-login" placeholder="Masukkan password" required>
+                    <input type="password" id="password-login" name="password" placeholder="Masukkan password" required>
                 </div>
                 <div class="form-options">
                     <label><input type="checkbox"> Ingat Saya</label>
@@ -39,22 +40,23 @@
                 <button type="submit" class="btn-auth">Masuk Sekarang</button>
             </form>
 
-            <form id="form-register" class="auth-form hidden">
+            <!-- FORM DAFTAR: Nyambung ke proses_daftar.php -->
+            <form id="form-register" class="auth-form hidden" action="proses_daftar.php" method="POST">
                 <div class="input-group">
                     <label for="name-reg">Nama Lengkap</label>
-                    <input type="text" id="name-reg" placeholder="Nama sesuai KTP" required>
+                    <input type="text" id="name-reg" name="nama" placeholder="Nama sesuai KTP" required>
                 </div>
                 <div class="input-group">
                     <label for="email-reg">Email</label>
-                    <input type="email" id="email-reg" placeholder="zidan@email.com" required>
+                    <input type="email" id="email-reg" name="email" placeholder="123@email.com" required>
                 </div>
                 <div class="input-group">
                     <label for="phone-reg">Nomor WhatsApp</label>
-                    <input type="tel" id="phone-reg" placeholder="0812xxxx" required>
+                    <input type="tel" id="phone-reg" name="no_wa" placeholder="0812xxxx" required>
                 </div>
                 <div class="input-group">
                     <label for="password-reg">Password Baru</label>
-                    <input type="password" id="password-reg" placeholder="Minimal 8 karakter" required>
+                    <input type="password" id="password-reg" name="password" placeholder="Minimal 8 karakter" required>
                 </div>
                 <button type="submit" class="btn-auth btn-register">Buat Akun</button>
             </form>

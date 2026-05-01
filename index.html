@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omah Outdoor | Sewa Alat Mudah & Cepat</title>
+    <!-- CSS Internal & Google Fonts -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="container nav-wrapper">
             <a href="index.html" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
@@ -16,11 +18,12 @@
                 <li><a href="#beranda">Beranda</a></li>
                 <li><a href="#solusi">Keunggulan</a></li>
                 <li><a href="#katalog">Katalog</a></li>
-                <li><a href="login.html" class="btn-login">Login / Daftar</a></li>
+                <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header id="beranda" class="hero">
         <div class="container hero-content">
             <h1>Sewa Perlengkapan Outdoor Praktis & Efisien</h1>
@@ -32,6 +35,7 @@
         </div>
     </header>
 
+    <!-- Solusi Section (Keunggulan) -->
     <section id="solusi" class="features">
         <div class="container">
             <div class="section-title">
@@ -40,22 +44,23 @@
             </div>
             
             <div class="feature-grid">
-                <div class="feature-card">
+                <!-- Klik kartu untuk memicu fungsi openModal di script.js -->
+                <div class="feature-card" onclick="openModal('katalog')">
                     <div class="icon">📦</div>
                     <h3>Katalog & Stok Real-Time</h3>
                     <p>Cek ketersediaan alat secara akurat, langsung pesan tanpa nunggu balasan admin.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="openModal('jadwal')">
                     <div class="icon">📅</div>
                     <h3>Pemesanan Terjadwal</h3>
                     <p>Sistem booking online pintar untuk mencegah double booking dan antrean panjang.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="openModal('automasi')">
                     <div class="icon">⚙️</div>
                     <h3>Automasi Administrasi</h3>
                     <p>Perhitungan biaya sewa dan denda keterlambatan dihitung otomatis oleh sistem.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="openModal('pickup')">
                     <div class="icon">⚡</div>
                     <h3>Layanan Cepat (Pick-up)</h3>
                     <p>Pesan online, bayar, lalu datang ke toko hanya untuk mengambil barang.</p>
@@ -64,6 +69,7 @@
         </div>
     </section>
 
+    <!-- Katalog Section -->
     <section id="katalog" class="catalog">
         <div class="container">
             <div class="section-title">
@@ -72,6 +78,7 @@
             </div>
 
             <div class="product-grid">
+                <!-- Produk 1 -->
                 <div class="product-card">
                     <div class="product-badge">Tersedia</div>
                     <div class="product-img">
@@ -84,6 +91,7 @@
                     </div>
                 </div>
 
+                <!-- Produk 2 -->
                 <div class="product-card">
                     <div class="product-badge">Tersedia</div>
                     <div class="product-img">
@@ -96,6 +104,7 @@
                     </div>
                 </div>
 
+                <!-- Produk 3 -->
                 <div class="product-card">
                     <div class="product-badge busy">Disewa</div>
                     <div class="product-img">
@@ -111,6 +120,17 @@
         </div>
     </section>
 
+    <!-- Struktur Modal (Pop-up) -->
+    <div id="featureModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- Konten akan diisi oleh script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
@@ -133,5 +153,7 @@
         </div>
     </footer>
 
+    <!-- PEMANGGILAN JAVASCRIPT EKSTERNAL -->
+    <script src="assets/js/script.js"></script>
 </body>
 </html>

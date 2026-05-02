@@ -16,9 +16,11 @@ if (mysqli_num_rows($result) > 0) {
     
     // Cek kecocokan password yang diketik dengan yang di database
     if (password_verify($password, $row['password'])) {
-        // Kalau cocok, kasih sesi login dan lempar ke beranda
-        $_SESSION['user_email'] = $email;
-        echo "<script>alert('Login Sukses, Bre!'); window.location='index.html';</script>";
+        
+        // INI DIA YANG DIBENERIN 👇 (Namanya disamain jadi 'email' biar klop sama index.php)
+        $_SESSION['email'] = $email; 
+        
+        echo "<script>alert('Login Sukses, Bre!'); window.location='index.php';</script>";
     } else {
         // Kalau password salah
         echo "<script>alert('Password salah, coba lagi!'); window.location='login.php';</script>";

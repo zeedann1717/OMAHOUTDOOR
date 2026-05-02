@@ -18,12 +18,12 @@
             </div>
 
             <div class="auth-header">
-                <a href="index.html" class="logo-back">🏕️ OMAH <span>OUTDOOR</span></a>
+                <a href="index.php" class="logo-back">🏕️ OMAH <span>OUTDOOR</span></a>
                 <h2 id="auth-title">Selamat Datang Kembali</h2>
                 <p id="auth-desc">Silakan masuk untuk mulai menyewa perlengkapan.</p>
             </div>
 
-            <!-- FORM LOGIN: Nyambung ke proses_login.php -->
+            <!-- FORM LOGIN -->
             <form id="form-login" class="auth-form" action="proses_login.php" method="POST">
                 <div class="input-group">
                     <label for="email-login">Email</label>
@@ -32,15 +32,20 @@
                 <div class="input-group">
                     <label for="password-login">Password</label>
                     <input type="password" id="password-login" name="password" placeholder="Masukkan password" required>
+                    <!-- Checkbox Lihat Password untuk Login -->
+                    <div style="margin-top: 8px; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="show-pass-login" onclick="lihatPassword('password-login')" style="width: auto; cursor: pointer;">
+                        <label for="show-pass-login" style="font-size: 14px; cursor: pointer;"> Tampilkan Password</label>
+                    </div>
                 </div>
                 <div class="form-options">
-                    <label><input type="checkbox"> Ingat Saya</label>
+                    <label><input type="checkbox" style="width: auto;"> Ingat Saya</label>
                     <a href="#">Lupa Password?</a>
                 </div>
                 <button type="submit" class="btn-auth">Masuk Sekarang</button>
             </form>
 
-            <!-- FORM DAFTAR: Nyambung ke proses_daftar.php -->
+            <!-- FORM DAFTAR -->
             <form id="form-register" class="auth-form hidden" action="proses_daftar.php" method="POST">
                 <div class="input-group">
                     <label for="name-reg">Nama Lengkap</label>
@@ -57,41 +62,20 @@
                 <div class="input-group">
                     <label for="password-reg">Password Baru</label>
                     <input type="password" id="password-reg" name="password" placeholder="Minimal 8 karakter" required>
+                    <!-- Checkbox Lihat Password untuk Daftar -->
+                    <div style="margin-top: 8px; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="show-pass-reg" onclick="lihatPassword('password-reg')" style="width: auto; cursor: pointer;">
+                        <label for="show-pass-reg" style="font-size: 14px; cursor: pointer;"> Tampilkan Password</label>
+                    </div>
                 </div>
                 <button type="submit" class="btn-auth btn-register">Buat Akun</button>
             </form>
 
             <div class="auth-footer">
-                <p>Kembali ke <a href="index.html">Beranda</a></p>
+                <p>Kembali ke <a href="index.php">Beranda</a></p>
             </div>
         </div>
     </div>
-
-    <script>
-        function switchForm(type) {
-            const loginForm = document.getElementById('form-login');
-            const regForm = document.getElementById('form-register');
-            const loginTab = document.getElementById('tab-login');
-            const regTab = document.getElementById('tab-register');
-            const title = document.getElementById('auth-title');
-            const desc = document.getElementById('auth-desc');
-
-            if (type === 'login') {
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
-                loginTab.classList.add('active');
-                regTab.classList.remove('active');
-                title.innerText = "Selamat Datang Kembali";
-                desc.innerText = "Silakan masuk untuk mulai menyewa perlengkapan.";
-            } else {
-                loginForm.classList.add('hidden');
-                regForm.classList.remove('hidden');
-                loginTab.classList.remove('active');
-                regTab.classList.add('active');
-                title.innerText = "Gabung Omah Outdoor";
-                desc.innerText = "Daftar sekarang untuk kemudahan booking alat.";
-            }
-        }
-    </script>
+    <script src="assets/js/script.js?v=1"></script>
 </body>
 </html>

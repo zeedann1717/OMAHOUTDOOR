@@ -372,4 +372,76 @@ h1, h2, h3, .logo {
     .footer-content {
         flex-direction: column;
     }
+
+    /* =========================================
+   STYLING UNTUK MODAL (POP-UP) KEUNGGULAN
+   ========================================= */
+
+    /* Background gelap yang nutupin layar penuh */
+    .modal {
+        display: none; /* Disembunyikan secara default */
+        position: fixed; /* Bikin posisinya selalu nempel di layar */
+        z-index: 9999; /* Z-index tinggi biar selalu di paling depan (di atas navbar) */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6); /* Warna hitam agak transparan */
+        align-items: center; /* Posisikan pop-up di tengah vertikal */
+        justify-content: center; /* Posisikan pop-up di tengah horizontal */
+    }
+
+    /* Kotak putih pop-upnya */
+    .modal-content {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 450px;
+        position: relative;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        animation: munculPopUp 0.3s ease-out; /* Animasi mulus saat muncul */
+    }
+
+    /* Tombol silang (X) buat nutup */
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #666;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .close-btn:hover {
+        color: #ff8c00; /* Berubah oren saat disorot mouse */
+    }
+
+    /* Biar teks di dalam pop-up rapi */
+    #modal-body h3 {
+        color: #1a237e;
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    #modal-body p {
+        color: #555;
+        line-height: 1.6;
+        font-size: 15px;
+    }
+
+    /* Animasi Muncul Mulus */
+    @keyframes munculPopUp {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 }

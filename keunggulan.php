@@ -9,15 +9,78 @@ session_start();
     <title>Keunggulan | Omah Outdoor</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .modal {
+            display: none; /* Awalnya sembunyi */
+            position: fixed; /* Melayang di layar */
+            z-index: 9999; /* Di depan elemen lain */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6); /* Background gelap transparan */
+            align-items: center; /* Vertikal tengah */
+            justify-content: center; /* Horizontal tengah */
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: munculPopUp 0.3s ease-out;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #ff8c00;
+        }
+
+        #modal-body h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        #modal-body p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        @keyframes munculPopUp {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="container nav-wrapper">
             <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
             <ul class="nav-links">
-                <!-- Logika Navbar Dinamis -->
                 <?php if(isset($_SESSION['email'])) : ?>
                     <li><a href="index.php">Beranda</a></li>
                     <li><a href="keunggulan.php" style="font-weight: bold; color: #ff8c00;">Keunggulan</a></li>
@@ -31,7 +94,6 @@ session_start();
         </div>
     </nav>
 
-    <!-- Solusi Section (Keunggulan) -->
     <section id="solusi" class="features" style="padding-top: 100px;">
         <div class="container">
             <div class="section-title">
@@ -64,7 +126,6 @@ session_start();
         </div>
     </section>
 
-    <!-- Struktur Modal (Pop-up) -->
     <div id="featureModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -72,7 +133,6 @@ session_start();
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">

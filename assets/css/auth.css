@@ -6,6 +6,10 @@
     --text-light: #64748b;
     --bg-auth: #f1f5f9;
     --white: #ffffff;
+    --bg-auth: #e8f5e9;
+    --bg-mountain: #1b4332;
+    --bg-forest: #2d6a4f;
+    --bg-mist: #a8c5a0;
 }
 
 * {
@@ -60,7 +64,7 @@ body {
 .tab-btn.active {
     background: var(--white);
     color: var(--primary-blue);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .auth-header {
@@ -78,7 +82,9 @@ body {
     margin-bottom: 15px;
 }
 
-.logo-back span { color: var(--accent-orange); }
+.logo-back span {
+    color: var(--accent-orange);
+}
 
 .auth-header h2 {
     font-family: 'Poppins', sans-serif;
@@ -92,9 +98,13 @@ body {
     color: var(--text-light);
 }
 
-.auth-form.hidden { display: none; }
+.auth-form.hidden {
+    display: none;
+}
 
-.input-group { margin-bottom: 20px; }
+.input-group {
+    margin-bottom: 20px;
+}
 
 .input-group label {
     display: block;
@@ -144,10 +154,16 @@ body {
     transition: background-color 0.3s;
 }
 
-.btn-auth:hover { background-color: var(--secondary-blue); }
+.btn-auth:hover {
+    background-color: var(--secondary-blue);
+}
 
-.btn-register { background-color: var(--accent-orange); }
-.btn-register:hover { background-color: #ea580c; }
+.btn-register {
+    background-color: var(--accent-orange);
+}
+.btn-register:hover {
+    background-color: #ea580c;
+}
 
 .auth-footer {
     text-align: center;

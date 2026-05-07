@@ -1,12 +1,17 @@
 /* --- RESET & VARIABLES --- */
 :root {
-   :root{
     --forest: #1b4332;
     --forest-light: #2d6a4f;
     --sage: #95d5b2;
     --cream: #f8f9f3;
     --orange: #ff8c42;
-   }
+    --white: #ffffff;
+    --primary-blue: #2d6a4f;
+    --secondary-blue: #1b4332;
+    --bg-light: #f8f9f3;
+    --text-dark: #1a202c;
+    --text-light: #64748b;
+    --accent-orange: #ff8c42;
 }
 
 * {
@@ -16,7 +21,7 @@
 }
 
 html {
-    scroll-behavior: smooth; 
+    scroll-behavior: smooth;
 }
 
 body {
@@ -26,7 +31,10 @@ body {
     line-height: 1.6;
 }
 
-h1, h2, h3, .logo {
+h1,
+h2,
+h3,
+.logo {
     font-family: 'Poppins', sans-serif;
 }
 
@@ -36,12 +44,23 @@ h1, h2, h3, .logo {
     padding: 0 20px;
 }
 
-/* Update Navbar */
+/* --- NAVBAR --- */
 .navbar {
-    background: transparent;
-    position: absolute; /* ✅ nempel di atas hero */
+    background: #1b4332;
+    position: fixed;
+    top: 0;
     width: 100%;
-    box-shadow: none; /* ✅ hapus shadow */
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    transition:
+        background 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+/* Khusus halaman index — transparan di atas hero */
+.navbar.navbar-hero {
+    background: transparent;
+    box-shadow: none;
 }
 
 .nav-wrapper {
@@ -52,46 +71,81 @@ h1, h2, h3, .logo {
 }
 
 .logo {
-    color: #ffffff; /* ✅ logo jadi putih */
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .logo span {
-  color: #95d5b2; /* ✅ span tetap beda warna tapi lebih soft */
+    color: #95d5b2;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 30px;
+    align-items: center;
 }
 
 .nav-links a {
-    color: #ffffff; /* ✅ link jadi putih */
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
 .nav-links a:hover {
     color: #95d5b2;
 }
 
-.nav-links {
-    display: flex;        /* ✅ susun horizontal */
-    flex-direction: row;  /* ✅ pastikan arahnya benar */
-    list-style: none;
-    gap: 30px;
-    align-items: center;
+/* Link halaman aktif */
+.nav-links a.active {
+    color: #95d5b2;
+    font-weight: 700;
+    border-bottom: 2px solid #95d5b2;
+    padding-bottom: 2px;
 }
 
-
 .btn-login {
-    background-color: var(--primary-blue);
-    color: var(--white) !important;
+    background-color: #95d5b2;
+    color: #1b4332 !important;
     padding: 10px 20px;
     border-radius: 8px;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    transition:
+        background-color 0.3s,
+        transform 0.2s;
 }
 
 .btn-login:hover {
-    background-color: var(--secondary-blue);
+    background-color: #ffffff;
+    color: #1b4332 !important;
+    transform: translateY(-2px);
+}
+
+.btn-logout {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition:
+        background-color 0.3s,
+        transform 0.2s;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background-color: #b02a37 !important;
+    transform: translateY(-2px);
 }
 
 /* --- HERO SECTION --- */
 .hero {
     background:
-        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('../images/outdoor.jpg');
 
     background-size: cover;
@@ -125,7 +179,8 @@ h1, h2, h3, .logo {
     gap: 20px;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
     padding: 14px 28px;
     border-radius: 8px;
     text-decoration: none;
@@ -133,24 +188,24 @@ h1, h2, h3, .logo {
     transition: all 0.3s;
 }
 
-.btn-primary{
+.btn-primary {
     background: #2d6a4f;
     color: white;
     transition: 0.3s ease;
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
     background: #1b4332;
     transform: translateY(-2px);
 }
 
-.btn-secondary{
+.btn-secondary {
     border: 2px solid #95d5b2;
     color: white;
     background: transparent;
 }
 
-.btn-secondary:hover{
+.btn-secondary:hover {
     background: #95d5b2;
     color: #1b4332;
 }
@@ -188,7 +243,9 @@ h1, h2, h3, .logo {
     border-radius: 12px;
     text-align: center;
     border: 1px solid #e2e8f0;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition:
+        transform 0.3s,
+        box-shadow 0.3s;
 }
 
 .feature-card:hover {
@@ -229,7 +286,7 @@ h1, h2, h3, .logo {
     background: var(--white);
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     position: relative;
     transition: transform 0.3s;
 }
@@ -347,7 +404,7 @@ h1, h2, h3, .logo {
 }
 
 .footer-team ul li::before {
-    content: "•";
+    content: '•';
     color: var(--accent-orange);
     position: absolute;
     left: 0;
@@ -364,9 +421,9 @@ h1, h2, h3, .logo {
 /* --- RESPONSIVE DESIGN (HP) --- */
 @media (max-width: 768px) {
     .nav-links {
-        display: none; 
+        display: none;
     }
-    
+
     .hero h1 {
         font-size: 36px;
     }
@@ -374,7 +431,7 @@ h1, h2, h3, .logo {
     .hero-buttons {
         flex-direction: column;
     }
-    
+
     .footer-content {
         flex-direction: column;
     }

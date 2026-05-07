@@ -9,7 +9,7 @@ session_start();
     <title>Keunggulan | Omah Outdoor</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         .modal {
             display: none; /* Awalnya sembunyi */
@@ -83,9 +83,9 @@ session_start();
             <ul class="nav-links">
                 <?php if(isset($_SESSION['email'])) : ?>
                     <li><a href="index.php">Beranda</a></li>
-                    <li><a href="keunggulan.php" style="font-weight: bold; color: #ff8c00;">Keunggulan</a></li>
+                    <li><a href="keunggulan.php" class="active">Keunggulan</a></li>
                     <li><a href="katalog.php">Katalog</a></li>
-                    <li><a href="logout.php" class="btn-login" style="background-color: #dc3545; color: white;">Logout</a></li>
+                    <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
                     <li><a href="index.php">Beranda</a></li>
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
@@ -100,7 +100,7 @@ session_start();
                 <h2>Solusi Yang Kami Berikan</h2>
                 <p>Mengatasi permasalahan sewa manual dengan sistem digital terpadu.</p>
             </div>
-            
+
             <div class="feature-grid">
                 <div class="feature-card" onclick="openModal('katalog')">
                     <div class="icon">📦</div>

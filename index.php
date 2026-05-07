@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -14,17 +14,15 @@ session_start();
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar">
+    <nav class="navbar navbar-hero">
         <div class="container nav-wrapper">
             <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
             <ul class="nav-links">
                 <?php if(isset($_SESSION['email'])) : ?>
-                    <!-- Tampilan Menu Kalau SUDAH Login -->
                     <li><a href="keunggulan.php">Keunggulan</a></li>
                     <li><a href="katalog.php">Katalog</a></li>
-                    <li><a href="logout.php" class="btn-login" style="background-color: #dc3545; color: white;">Logout</a></li>
+                    <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
-                    <!-- Tampilan Menu Kalau BELUM Login -->
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
                 <?php endif; ?>
             </ul>
@@ -37,7 +35,7 @@ session_start();
             <h1>Sewa Perlengkapan Outdoor Praktis & Efisien</h1>
             <p>Tinggalkan cara manual! Omah Outdoor hadir untuk memudahkan pengalaman sewa alat camping Anda tanpa ribet, tanpa antre, dan bebas double booking.</p>
             <div class="hero-buttons">
-                
+
                 <?php if(isset($_SESSION['email'])) : ?>
                     <!-- Tombol Kalau SUDAH Login (Langsung pindah halaman) -->
                     <a href="katalog.php" class="btn-primary">Lihat Katalog</a>

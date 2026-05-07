@@ -20,8 +20,8 @@ session_start();
                 <?php if(isset($_SESSION['email'])) : ?>
                     <li><a href="index.php">Beranda</a></li>
                     <li><a href="keunggulan.php">Keunggulan</a></li>
-                    <li><a href="katalog.php" style="font-weight: bold; color: #ff8c00;">Katalog</a></li>
-                    <li><a href="logout.php" class="btn-login" style="background-color: #dc3545; color: white;">Logout</a></li>
+                    <li><a href="katalog.php" class="active">Katalog</a></li>
+                    <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
                     <li><a href="index.php">Beranda</a></li>
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
@@ -90,7 +90,7 @@ session_start();
                         <a href="#" class="btn-check">Sewa Sekarang</a>
                     </div>
                 </div>
-           
+
                 <!-- Produk 5 -->
                 <div class="product-card">
                     <div class="product-badge">Tersedia</div>

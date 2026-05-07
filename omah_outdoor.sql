@@ -21,7 +21,8 @@ CREATE TABLE `users` (
 
 -- Data contoh akun admin
 INSERT INTO `users` (`id`, `nama`, `no_wa`, `role`, `email`, `password`, `created_at`) VALUES
-(1, 'Zidan Maulana', '081234567890', 'admin', 'maulanazidan4420@gmail.com', '$2y$10$joBTEvYAmgMDUtUfzW5.fOxwP9nHx7TGnE3mHEb9FWVWTbjfXVsSe', '2026-05-01 07:05:27');
+-- Password: admin123
+(1, 'Zidan Maulana', '081234567890', 'admin', 'maulanazidan4420@gmail.com', '$2y$10$J3.Fp8XxYwT0cIsBkJOmgeD7SAiwicmamKuKkFjUTXky1bNppG0V.', '2026-05-01 07:05:27');
 
 -- Index
 ALTER TABLE `users`

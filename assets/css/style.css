@@ -36,7 +36,7 @@ h1, h2, h3, .logo {
     padding: 0 20px;
 }
 
-/* --- NAVBAR --- */
+/* Update Navbar */
 .navbar {
     background: transparent;
     position: absolute; /* ✅ nempel di atas hero */

@@ -55,6 +55,9 @@ $result_produk = mysqli_query($conn, $query_produk);
                     <li><a href="index.php">Beranda</a></li>
                     <li><a href="keunggulan.php">Keunggulan</a></li>
                     <li><a href="katalog.php" class="active">Katalog</a></li>
+                    <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
+                        <li><a href="dashboard_admin.php" class="btn-login">🛠️ Dashboard Admin</a></li>
+                    <?php endif; ?>
                     <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
                     <li><a href="index.php">Beranda</a></li>

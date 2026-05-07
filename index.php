@@ -19,8 +19,12 @@ session_start();
             <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
             <ul class="nav-links">
                 <?php if(isset($_SESSION['email'])) : ?>
+                    <!-- Tampilan Menu Kalau SUDAH Login -->
                     <li><a href="keunggulan.php">Keunggulan</a></li>
                     <li><a href="katalog.php">Katalog</a></li>
+                    <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
+                        <li><a href="dashboard_admin.php" class="btn-login">🛠️ Dashboard Admin</a></li>
+                    <?php endif; ?>
                     <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>

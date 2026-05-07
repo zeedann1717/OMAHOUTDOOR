@@ -1,8 +1,11 @@
 <?php
 session_start();
 require_once 'koneksi.php';
-$query_produk  = "SELECT * FROM produk ORDER BY id ASC";
-$result_produk = mysqli_query($conn, $query_produk);
+
+// Cek dulu apakah tabel produk sudah ada
+$cek_tabel     = mysqli_query($conn, "SHOW TABLES LIKE 'produk'");
+$tabel_ada     = $cek_tabel && mysqli_num_rows($cek_tabel) > 0;
+$result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY id ASC") : false;
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -76,7 +79,11 @@ $result_produk = mysqli_query($conn, $query_produk);
             </div>
 
             <div class="product-grid">
-    <?php if (mysqli_num_rows($result_produk) === 0) : ?>
+    <?php if (!$result_produk) : ?>
+        <p style="text-align:center; color:#dc3545; grid-column: 1/-1;">
+            ⚠️ Tabel produk belum ada. Silakan re-import file <strong>omah_outdoor.sql</strong> terbaru ke phpMyAdmin.
+        </p>
+    <?php elseif (mysqli_num_rows($result_produk) === 0) : ?>
         <p style="text-align:center; color:#64748b; grid-column: 1/-1;">Belum ada produk tersedia.</p>
     <?php else : ?>
         <?php while ($produk = mysqli_fetch_assoc($result_produk)) : ?>

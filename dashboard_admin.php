@@ -7,6 +7,12 @@ $query_users = "SELECT * FROM users ORDER BY created_at DESC";
 $result_users = mysqli_query($conn, $query_users);
 $total_users = mysqli_num_rows($result_users);
 
+// Hitung total produk
+$query_produk  = "SELECT COUNT(*) as total FROM produk";
+$result_produk_count = mysqli_query($conn, $query_produk);
+$row_produk    = mysqli_fetch_assoc($result_produk_count);
+$total_produk  = $row_produk['total'];
+
 // Hitung admin
 $query_admin = "SELECT COUNT(*) as total FROM users WHERE role='admin'";
 $result_admin = mysqli_query($conn, $query_admin);
@@ -41,8 +47,11 @@ $total_user_biasa = $total_users - $total_admin;
             <a href="#section-users" class="nav-item">
                 <span class="nav-icon">👥</span> Data User
             </a>
+            <a href="kelola_produk.php" class="nav-item">
+                <span class="nav-icon">📦</span> Kelola Produk
+            </a>
             <a href="katalog.php" class="nav-item">
-                <span class="nav-icon">📦</span> Lihat Katalog
+                <span class="nav-icon">🛍️</span> Lihat Katalog
             </a>
             <a href="index.php" class="nav-item">
                 <span class="nav-icon">🏠</span> Ke Beranda
@@ -102,7 +111,7 @@ $total_user_biasa = $total_users - $total_admin;
                 <div class="stat-icon" style="background: #ffe4e6; color: #9f1239;">📦</div>
                 <div class="stat-info">
                     <p class="stat-label">Total Produk</p>
-                    <h2 class="stat-value">6</h2>
+                    <h2 class="stat-value"><?= $total_produk ?></h2>
                 </div>
             </div>
         </section>

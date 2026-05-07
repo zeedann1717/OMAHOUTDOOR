@@ -31,4 +31,23 @@ ALTER TABLE `users`
 
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+-- Struktur tabel `produk`
+CREATE TABLE `produk` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_produk` varchar(150) NOT NULL,
+  `harga_per_hari` int(11) NOT NULL,
+  `status` enum('tersedia','disewa') NOT NULL DEFAULT 'tersedia',
+  `gambar` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `produk` (`nama_produk`, `harga_per_hari`, `status`, `gambar`) VALUES
+('Tenda Dome Kap. 4', 35000, 'tersedia', 'Tenda Dome Kap. 4.jpg'),
+('Carrier 60L', 25000, 'tersedia', 'Carrier 60L.jpg'),
+('Sleeping Bag Polar Bulu', 10000, 'disewa', 'Sleeping Bag Polar Bulu.jpeg'),
+('Sepatu Gunung', 20000, 'tersedia', 'Sepatu Gunung.jpg'),
+('Kompor Portable', 15000, 'tersedia', 'Kompor Portable.jpg'),
+('Matras Foil Aluminium', 5000, 'tersedia', 'Matras Foil Aluminium.jpg');
+
 COMMIT;

@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once 'koneksi.php';
+$query_produk  = "SELECT * FROM produk ORDER BY id ASC";
+$result_produk = mysqli_query($conn, $query_produk);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -13,7 +16,7 @@ session_start();
 <style>
   body {
     background-color: #ffffff;
-    background-image: url("https://www.transparenttextures.com/patterns/white-wall.png"), 
+    background-image: url("https://www.transparenttextures.com/patterns/white-wall.png"),
                       url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
     background-attachment: fixed;
 }
@@ -70,84 +73,30 @@ session_start();
             </div>
 
             <div class="product-grid">
-                <!-- Produk 1 -->
-                <div class="product-card">
-                    <div class="product-badge">Tersedia</div>
-                    <div class="product-img">
-                        <img src="assets/images/Tenda Dome Kap. 4.jpg" alt="Tenda Dome" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Tenda Dome Kap. 4</h3>
-                        <p class="price">Rp 35.000 / hari</p>
-                        <a href="#" class="btn-check">Sewa Sekarang</a>
-                    </div>
-                </div>
-
-                <!-- Produk 2 -->
-                <div class="product-card">
-                    <div class="product-badge">Tersedia</div>
-                    <div class="product-img">
-                        <img src="assets/images/Carrier 60L.jpg" alt="Tas Carrier" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Carrier 60L</h3>
-                        <p class="price">Rp 25.000 / hari</p>
-                        <a href="#" class="btn-check">Sewa Sekarang</a>
-                    </div>
-                </div>
-
-                <!-- Produk 3 -->
-                <div class="product-card">
-                    <div class="product-badge busy">Disewa</div>
-                    <div class="product-img">
-                        <img src="assets/images/Sleeping Bag Polar Bulu.jpeg" alt="Sleeping Bag" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Sleeping Bag Polar Bulu</h3>
-                        <p class="price">Rp 10.000 / hari</p>
-                        <a href="#" class="btn-check">Cek Ketersediaan</a>
-                    </div>
-                </div>
-
-                <!-- Produk 4 -->
-                <div class="product-card">
-                    <div class="product-badge">Tersedia</div>
-                    <div class="product-img">
-                        <img src="assets/images/Sepatu Gunung.jpg" alt="Sepatu Gunung" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Sepatu Gunung</h3>
-                        <p class="price">Rp 20.000 / hari</p>
-                        <a href="#" class="btn-check">Sewa Sekarang</a>
-                    </div>
-                </div>
-
-                <!-- Produk 5 -->
-                <div class="product-card">
-                    <div class="product-badge">Tersedia</div>
-                    <div class="product-img">
-                        <img src="assets/images/Kompor Portable.jpg" alt="Kompor Portable" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Kompor Portable</h3>
-                        <p class="price">Rp 15.000 / hari</p>
-                        <a href="login.php" class="btn-check">Sewa Sekarang</a>
-                    </div>
-                </div>
-
-                <!-- Produk 6 -->
-                <div class="product-card">
-                    <div class="product-badge">Tersedia</div>
-                    <div class="product-img">
-                        <img src="assets/images/Matras Foil Aluminium.jpg" alt="Matras Foil" onerror="this.style.display='none'">
-                    </div>
-                    <div class="product-info">
-                        <h3>Matras Foil Aluminium</h3>
-                        <p class="price">Rp 5.000 / hari</p>
-                        <a href="login.php" class="btn-check">Sewa Sekarang</a>
-                    </div>
-                </div>
+    <?php if (mysqli_num_rows($result_produk) === 0) : ?>
+        <p style="text-align:center; color:#64748b; grid-column: 1/-1;">Belum ada produk tersedia.</p>
+    <?php else : ?>
+        <?php while ($produk = mysqli_fetch_assoc($result_produk)) : ?>
+        <div class="product-card">
+            <div class="product-badge <?= $produk['status'] === 'disewa' ? 'busy' : '' ?>">
+                <?= $produk['status'] === 'disewa' ? 'Disewa' : 'Tersedia' ?>
             </div>
+            <div class="product-img">
+                <img src="assets/images/<?= htmlspecialchars($produk['gambar']) ?>"
+                     alt="<?= htmlspecialchars($produk['nama_produk']) ?>"
+                     onerror="this.style.display='none'">
+            </div>
+            <div class="product-info">
+                <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>
+                <p class="price">Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari</p>
+                <a href="#" class="btn-check">
+                    <?= $produk['status'] === 'disewa' ? 'Cek Ketersediaan' : 'Sewa Sekarang' ?>
+                </a>
+            </div>
+        </div>
+        <?php endwhile; ?>
+    <?php endif; ?>
+</div>
         </div>
     </section>
 

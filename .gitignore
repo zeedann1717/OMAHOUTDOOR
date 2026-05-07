@@ -1,0 +1,11 @@
+# File koneksi database - tiap anggota punya config lokal masing-masing
+koneksi.php
+
+# File sampah sistem
+nul
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

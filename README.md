@@ -1,42 +1,171 @@
-*PANDUAN LANJUTIN PROJECT OMAH OUTDOOR (Buat Anggota Kelompok)*
+# 🏕️ OMAH OUTDOOR — Panduan Setup Lengkap
+> Buat seluruh anggota Kelompok 6 — baca sampai habis biar gak error!
 
-Tahap 1: Tarik Kodingan ke XAMPP
+---
 
-1.Buka folder C:\xampp\htdocs\ di laptop kalian.
+## ⚡ PERTAMA KALI SETUP (Laptop Baru / Baru Clone)
 
-2.Klik kanan di area kosong, pilih Open Git Bash here.
+### Tahap 1 — Clone Project dari GitHub
 
-3.Ketik perintah ini buat narik semua file dari GitHub:
-*git clone https://github.com/zeedann1717/OMAHOUTDOOR.git*
+**Kalau pakai XAMPP:**
+1. Buka folder `C:\xampp\htdocs\`
+2. Klik kanan → **Open Git Bash here**
+3. Ketik:
+```
+git clone https://github.com/zeedann1717/OMAHOUTDOOR.git
+```
 
-4.Nanti bakal otomatis muncul folder OMAHOUTDOOR di dalem htdocs kalian.
+**Kalau pakai Laragon:**
+1. Buka folder `D:\laragon\www\` (atau di mana Laragon kamu terinstall)
+2. Klik kanan → **Open Git Bash here**
+3. Ketik:
+```
+git clone https://github.com/zeedann1717/OMAHOUTDOOR.git
+```
 
-Tahap 2: Nyalain Database (PENTING!)
-Kodingan PHP nggak bakal jalan kalau database-nya nggak dipasang.
+---
 
-1.Buka aplikasi XAMPP Control Panel, klik Start pada Apache dan MySQL (sampai hijau).
+### Tahap 2 — Buat File `koneksi.php` (WAJIB, Tidak Ikut Git!)
 
-2.Buka browser, ketik alamat: localhost/phpmyadmi.
+> ⚠️ File ini sengaja **tidak ikut** di GitHub karena tiap orang beda konfigurasi.
+> Kamu harus buat sendiri setiap kali clone di laptop baru!
 
-3.Bikin database baru (klik menu "New" di kiri), kasih nama persis: omah_outdoor, lalu klik Buat/Create.
+Buat file baru bernama **`koneksi.php`** di dalam folder `OMAHOUTDOOR/`, isi sesuai aplikasi yang kamu pakai:
 
-4.Klik database omah_outdoor yang barusan dibikin.
+**Kalau pakai XAMPP:**
+```php
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "omah_outdoor";
 
-5.Liat menu di atas, klik tab Impor (sebelahnya Ekspor).
+$conn = mysqli_connect($host, $user, $pass, $db);
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+?>
+```
 
-6.Klik tombol Choose File (Pilih File), terus cari dan masukin file omah_outdoor.sql yang ada di dalem folder project hasil download-an tadi.
+**Kalau pakai Laragon:**
+```php
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "root";
+$db   = "omah_outdoor";
 
-7.Scroll mentok ke bawah, klik tombol Impor (atau Go).
+$conn = mysqli_connect($host, $user, $pass, $db);
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+?>
+```
 
+---
 
-Tahap 3: Testing & Lanjut Ngoding
+### Tahap 3 — Setup Database
 
-1.Buka browser, ketik: localhost/OMAHOUTDOOR/login.php
+1. Pastikan **Apache** dan **MySQL** sudah **Running** (hijau) di XAMPP / Laragon
+2. Buka browser → ketik `http://localhost/phpmyadmin`
+3. Klik **New** di sidebar kiri → beri nama **`omah_outdoor`** → klik **Create**
+4. Klik database `omah_outdoor` yang baru dibuat
+5. Klik tab **Import** di menu atas
+6. Klik **Choose File** → cari file **`omah_outdoor.sql`** di folder project
+7. Scroll ke bawah → klik **Go / Impor**
+8. Tunggu sampai muncul notif hijau "Import has been successfully finished"
 
-2.Coba tes daftar akun atau login. Kalau masuk, berarti laptop kalian udah sukses terhubung ke database lokal!
+---
 
-3.Sekarang kalian bisa buka foldernya di VS Code dan lanjutin ngerjain bagian masing-masing.
+### Tahap 4 — Coba Jalankan
 
-Tiap kali baru buka laptop mau ngelanjutin tugas, WAJIB buka Git Bash di dalem folder OMAHOUTDOOR dan ketik:
-*git pull origin main*
-Ini biar kodingan kalian selalu dapet update terbaru dari yang lain, jadi kodingannya nggak tabrakan/bentrok!
+Buka browser → ketik:
+```
+http://localhost/OMAHOUTDOOR/login.php
+```
+
+**Akun Admin (untuk testing):**
+| Field | Value |
+|-------|-------|
+| Email | `maulanazidan4420@gmail.com` |
+| Password | `admin123` |
+
+Kalau bisa login dan masuk ke dashboard → **setup berhasil!** ✅
+
+---
+
+## 🔄 SETIAP KALI MAU NGODING
+
+Sebelum mulai ngoding, **wajib** pull dulu biar dapat update terbaru:
+
+```
+git pull origin main
+```
+
+> Lakukan ini setiap kali buka laptop dan mau lanjut ngerjain!
+
+---
+
+## 📤 SETELAH SELESAI NGODING
+
+Kalau sudah selesai bikin / edit fitur, push ke GitHub:
+
+```
+git add .
+git commit -m "tulis apa yang kamu kerjain"
+git push origin main
+```
+
+> ⚠️ **Jangan push `koneksi.php`!** File itu sudah masuk `.gitignore` jadi otomatis tidak ikut.
+
+---
+
+## ❓ TROUBLESHOOTING — Error Umum
+
+| Error | Penyebab | Solusi |
+|-------|----------|--------|
+| Halaman tidak bisa dibuka | Apache/MySQL belum jalan | Start Apache & MySQL di XAMPP/Laragon |
+| "Koneksi gagal" / blank page | `koneksi.php` belum ada atau password salah | Buat ulang `koneksi.php` sesuai panduan Tahap 2 |
+| Login selalu gagal / error DB | Database belum diimport atau struktur lama | Hapus DB lama, buat ulang, import `omah_outdoor.sql` terbaru |
+| Port 80 bentrok | Ada aplikasi lain pakai port 80 | Ganti port Apache ke 8080 di settings XAMPP/Laragon, akses via `localhost:8080` |
+| `git pull` bentrok / conflict | Ada file yang sama diedit berdua | Hubungi Zidan untuk resolve conflict |
+
+---
+
+## 📁 Struktur File Project
+
+```
+OMAHOUTDOOR/
+├── assets/
+│   ├── css/
+│   │   ├── style.css       → CSS halaman utama
+│   │   ├── admin.css       → CSS dashboard admin
+│   │   └── auth.css        → CSS halaman login
+│   ├── images/             → Foto produk
+│   └── js/
+│       └── script.js       → JavaScript
+├── index.php               → Halaman beranda
+├── login.php               → Halaman login & daftar
+├── katalog.php             → Halaman katalog produk
+├── keunggulan.php          → Halaman keunggulan
+├── logout.php              → Proses logout
+├── proses_login.php        → Backend login
+├── proses_daftar.php       → Backend daftar akun
+├── proses_produk.php       → Backend kelola produk (admin)
+├── dashboard_admin.php     → Dashboard admin
+├── kelola_produk.php       → Halaman kelola produk (admin)
+├── cek_admin.php           → Guard: hanya admin yang bisa akses
+├── cek_login.php           → Guard: hanya yang sudah login
+├── koneksi.php             → ⚠️ TIDAK ADA DI GIT, buat sendiri!
+└── omah_outdoor.sql        → File database, import ke phpMyAdmin
+```
+
+---
+
+## 👥 Developed by Kelompok 6
+
+- Zidan Maulana
+- Bintang Putra D
+- M Rasyid Murtado
+- Arif Maulana
+- Gesa Santiko G

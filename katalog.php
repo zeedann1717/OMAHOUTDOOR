@@ -10,6 +10,37 @@ session_start();
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
+<style>
+  body {
+    background-color: #ffffff;
+    background-image: url("https://www.transparenttextures.com/patterns/white-wall.png"), 
+                      url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+    background-attachment: fixed;
+}
+
+/* Tambahkan sedikit shadow pada teks judul agar lebih 'pop' */
+.section-title h2 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Membuat judul lebih tegas */
+.section-title h2 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
+}
+    /* Jika Anda ingin menambahkan overlay gelap agar teks lebih mudah dibaca */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.05); /* Hitam transparan 5% */
+        z-index: -1;
+    }
+</style>
 <body>
 
     <!-- Navbar -->

@@ -1,13 +1,8 @@
 <?php
 $host = "localhost";
-$user = "root"; // Username bawaan XAMPP
- HEAD
-$pass = "root"; // Password bawaan Laragon
-$db   = "omah_outdoor"; // Nama database lo bos
-
-$pass = "root"; // Password bawaan Laragon
-$db   = "omah_outdoor"; // Nama database lo
- c0cd69b8dd2ab34be41ac5634a728818d43b5b24
+$user = "root";
+$pass = "";
+$db   = "omah_outdoor";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 

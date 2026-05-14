@@ -46,6 +46,34 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         background: rgba(0, 0, 0, 0.05); /* Hitam transparan 5% */
         z-index: -1;
     }
+    .stok-info {
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stok-ada {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.stok-habis {
+    background-color: #fdecea;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.btn-check.disabled {
+    background-color: #aaa !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    opacity: 0.7;
+}
 </style>
 <body>
 
@@ -96,13 +124,22 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
                      alt="<?= htmlspecialchars($produk['nama_produk']) ?>"
                      onerror="this.style.display='none'">
             </div>
-            <div class="product-info">
-                <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>
-                <p class="price">Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari</p>
-                <a href="#" class="btn-check">
-                    <?= $produk['status'] === 'disewa' ? 'Cek Ketersediaan' : 'Sewa Sekarang' ?>
-                </a>
-            </div>
+           <div class="product-info">
+    <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>
+
+    <p class="price">
+        Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari
+    </p>
+
+    <p class="stok-info <?= $produk['stok'] > 0 ? 'stok-ada' : 'stok-habis' ?>">
+        <?= $produk['stok'] > 0 ? 'Stok tersedia: ' . $produk['stok'] : 'Stok habis' ?>
+    </p>
+
+    <a href="#"
+       class="btn-check <?= $produk['stok'] <= 0 ? 'disabled' : '' ?>">
+        <?= $produk['stok'] <= 0 ? 'Stok Habis' : ($produk['status'] === 'disewa' ? 'Cek Ketersediaan' : 'Sewa Sekarang') ?>
+    </a>
+</div>
         </div>
         <?php endwhile; ?>
     <?php endif; ?>

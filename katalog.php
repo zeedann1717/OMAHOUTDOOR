@@ -77,7 +77,6 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
 </style>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="container nav-wrapper">
             <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
@@ -98,7 +97,6 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         </div>
     </nav>
 
-    <!-- Katalog Section -->
     <section id="katalog" class="catalog" style="padding-top: 100px;">
         <div class="container">
             <div class="section-title">
@@ -116,8 +114,8 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
     <?php else : ?>
         <?php while ($produk = mysqli_fetch_assoc($result_produk)) : ?>
         <div class="product-card">
-            <div class="product-badge <?= $produk['status'] === 'disewa' ? 'busy' : '' ?>">
-                <?= $produk['status'] === 'disewa' ? 'Disewa' : 'Tersedia' ?>
+            <div class="product-badge <?= strtolower($produk['status']) === 'disewa' ? 'busy' : '' ?>">
+                <?= strtolower($produk['status']) === 'disewa' ? 'Disewa' : 'Tersedia' ?>
             </div>
             <div class="product-img">
                 <img src="assets/images/<?= htmlspecialchars($produk['gambar']) ?>"
@@ -131,13 +129,13 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari
     </p>
 
-    <p class="stok-info <?= $produk['stok'] > 0 ? 'stok-ada' : 'stok-habis' ?>">
-        <?= $produk['stok'] > 0 ? 'Stok tersedia: ' . $produk['stok'] : 'Stok habis' ?>
+    <p class="stok-info <?= strtolower($produk['status']) === 'tersedia' ? 'stok-ada' : 'stok-habis' ?>">
+        <?= strtolower($produk['status']) === 'tersedia' ? 'Barang Tersedia' : 'Sedang Disewa' ?>
     </p>
 
-    <a href="pesan.php?produk_id=<?= $produk['id'] ?>"
-       class="btn-check <?= $produk['stok'] <= 0 ? 'disabled' : '' ?>">
-        <?= $produk['stok'] <= 0 ? 'Stok Habis' : ($produk['status'] === 'disewa' ? 'Cek Ketersediaan' : 'Sewa Sekarang') ?>
+    <a href="<?= strtolower($produk['status']) === 'tersedia' ? 'pesan.php?produk_id=' . $produk['id'] : '#' ?>"
+       class="btn-check <?= strtolower($produk['status']) !== 'tersedia' ? 'disabled' : '' ?>">
+        <?= strtolower($produk['status']) === 'tersedia' ? 'Sewa Sekarang' : 'Sedang Disewa' ?>
     </a>
 </div>
         </div>
@@ -147,7 +145,6 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">

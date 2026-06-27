@@ -3,9 +3,9 @@ require_once 'cek_admin.php';
 require_once 'koneksi.php';
 
 // Ambil semua user
-$query_users = "SELECT * FROM users ORDER BY created_at DESC";
+$query_users  = "SELECT id, COALESCE(NULLIF(nama,''), SUBSTRING_INDEX(email,'@',1)) as nama, email, COALESCE(no_wa, '-') as no_wa, role, created_at FROM users ORDER BY created_at DESC";
 $result_users = mysqli_query($conn, $query_users);
-$total_users = mysqli_num_rows($result_users);
+$total_users  = mysqli_num_rows($result_users);
 
 // Hitung total produk
 $query_produk  = "SELECT COUNT(*) as total FROM produk";

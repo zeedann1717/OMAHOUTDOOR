@@ -8,7 +8,9 @@ $order = null;
 $error = '';
 
 if ($kode) {
-    $query = "SELECT o.*, p.nama_produk, p.gambar, u.nama as nama_user, u.email, u.no_wa
+    $query = "SELECT o.*, p.nama_produk, p.gambar,
+                     COALESCE(NULLIF(u.nama,''), SUBSTRING_INDEX(u.email,'@',1)) as nama_user,
+                     u.email, COALESCE(u.no_wa, '-') as no_wa
               FROM orders o
               JOIN produk p ON o.produk_id = p.id
               JOIN users u ON o.user_id = u.id
@@ -22,7 +24,7 @@ if ($kode) {
 }
 
 // Ambil semua order untuk tabel
-$all_orders = mysqli_query($conn, "SELECT o.*, p.nama_produk, u.nama as nama_user FROM orders o JOIN produk p ON o.produk_id=p.id JOIN users u ON o.user_id=u.id ORDER BY o.created_at DESC LIMIT 20");
+$all_orders = mysqli_query($conn, "SELECT o.*, p.nama_produk, COALESCE(NULLIF(u.nama,''), SUBSTRING_INDEX(u.email,'@',1)) as nama_user FROM orders o JOIN produk p ON o.produk_id=p.id JOIN users u ON o.user_id=u.id ORDER BY o.created_at DESC LIMIT 20");
 
 $notif = '';
 $notif_class = '';

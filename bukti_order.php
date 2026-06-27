@@ -5,7 +5,10 @@ require_once 'koneksi.php';
 $kode = mysqli_real_escape_string($conn, $_GET['kode'] ?? '');
 if (!$kode) { header('Location: katalog.php'); exit; }
 
-$query = "SELECT o.*, p.nama_produk, p.gambar, p.harga_per_hari, u.nama as nama_user, u.email, u.no_wa
+$query = "SELECT o.*, p.nama_produk, p.gambar, p.harga_per_hari,
+                 COALESCE(NULLIF(u.nama,''), SUBSTRING_INDEX(u.email,'@',1)) as nama_user,
+                 u.email,
+                 COALESCE(u.no_wa, '-') as no_wa
           FROM orders o
           JOIN produk p ON o.produk_id = p.id
           JOIN users u ON o.user_id = u.id

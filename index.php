@@ -22,6 +22,7 @@ session_start();
                     <!-- Tampilan Menu Kalau SUDAH Login -->
                     <li><a href="keunggulan.php">Keunggulan</a></li>
                     <li><a href="katalog.php">Katalog</a></li>
+                    <li><a href="riwayat_order.php">Riwayat Order</a></li>
                     <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
                         <li><a href="dashboard_admin.php" class="btn-login">🛠️ Dashboard Admin</a></li>
                     <?php endif; ?>

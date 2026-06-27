@@ -11,6 +11,7 @@ SET NAMES utf8mb4;
 -- ============================================================
 -- Hapus tabel lama jika ada (agar import ulang tidak error)
 -- ============================================================
+DROP TABLE IF EXISTS `orders`;
 DROP TABLE IF EXISTS `produk`;
 DROP TABLE IF EXISTS `users`;
 
@@ -56,3 +57,21 @@ INSERT INTO `produk` (`nama_produk`, `harga_per_hari`, `status`, `gambar`) VALUE
 ('Sepatu Gunung',        20000, 'tersedia', 'Sepatu Gunung.jpg'),
 ('Kompor Portable',      15000, 'tersedia', 'Kompor Portable.jpg'),
 ('Matras Foil Aluminium', 5000, 'tersedia', 'Matras Foil Aluminium.jpg');
+
+-- ============================================================
+-- Struktur tabel `orders`
+-- ============================================================
+CREATE TABLE `orders` (
+  `id`              int(11)    NOT NULL AUTO_INCREMENT,
+  `kode_order`      varchar(30) NOT NULL,
+  `user_id`         int(11)    NOT NULL,
+  `produk_id`       int(11)    NOT NULL,
+  `tanggal_mulai`   date       NOT NULL,
+  `tanggal_selesai` date       NOT NULL,
+  `durasi_hari`     int(11)    NOT NULL,
+  `total_harga`     int(11)    NOT NULL,
+  `status`          enum('pending','dikonfirmasi','selesai','dibatalkan') NOT NULL DEFAULT 'pending',
+  `created_at`      timestamp  NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `kode_order` (`kode_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

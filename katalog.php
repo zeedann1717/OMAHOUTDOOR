@@ -135,7 +135,7 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         <?= $produk['stok'] > 0 ? 'Stok tersedia: ' . $produk['stok'] : 'Stok habis' ?>
     </p>
 
-    <a href="#"
+    <a href="pesan.php?produk_id=<?= $produk['id'] ?>"
        class="btn-check <?= $produk['stok'] <= 0 ? 'disabled' : '' ?>">
         <?= $produk['stok'] <= 0 ? 'Stok Habis' : ($produk['status'] === 'disewa' ? 'Cek Ketersediaan' : 'Sewa Sekarang') ?>
     </a>

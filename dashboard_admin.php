@@ -50,6 +50,9 @@ $total_user_biasa = $total_users - $total_admin;
             <a href="kelola_produk.php" class="nav-item">
                 <span class="nav-icon">📦</span> Kelola Produk
             </a>
+            <a href="validasi_order.php" class="nav-item">
+                <span class="nav-icon">🔍</span> Validasi Order
+            </a>
             <a href="katalog.php" class="nav-item">
                 <span class="nav-icon">🛍️</span> Lihat Katalog
             </a>

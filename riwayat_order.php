@@ -26,6 +26,7 @@ $status_label = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Order | Omah Outdoor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/order.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
@@ -44,6 +45,11 @@ $status_label = [
                 <?php endif; ?>
                 <li><a href="logout.php" class="btn-logout">Logout</a></li>
             </ul>
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -143,153 +149,7 @@ $status_label = [
 
     </div>
 
-    <style>
-    .riwayat-container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 110px 20px 60px;
-    }
-    .riwayat-header {
-        margin-bottom: 28px;
-    }
-    .riwayat-header h1 {
-        font-family: 'Poppins', sans-serif;
-        font-size: 26px;
-        color: #1b4332;
-        margin-bottom: 6px;
-    }
-    .riwayat-header p { color: #64748b; font-size: 15px; }
 
-    /* Stats */
-    .riwayat-stats {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-    }
-    .stat-item {
-        background: #fff;
-        border-radius: 12px;
-        padding: 16px 24px;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        flex: 1;
-        min-width: 100px;
-    }
-    .stat-num {
-        display: block;
-        font-family: 'Poppins', sans-serif;
-        font-size: 28px;
-        font-weight: 700;
-        color: #1b4332;
-    }
-    .stat-lbl {
-        font-size: 12px;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    /* Order List */
-    .order-list { display: flex; flex-direction: column; gap: 16px; }
-
-    .order-item {
-        background: #fff;
-        border-radius: 16px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .order-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
-    .order-item-img img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 12px;
-        flex-shrink: 0;
-    }
-    .order-item-info { flex: 1; min-width: 0; }
-    .order-item-top {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 4px;
-    }
-    .order-item-top h3 {
-        font-family: 'Poppins', sans-serif;
-        font-size: 16px;
-        color: #1b4332;
-    }
-    .order-kode {
-        font-family: 'Courier New', monospace;
-        font-size: 13px;
-        font-weight: 700;
-        color: #2d6a4f;
-        margin-bottom: 6px;
-    }
-    .order-item-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 13px;
-        color: #64748b;
-        margin-bottom: 4px;
-    }
-    .order-date { font-size: 12px; color: #94a3b8; }
-
-    /* Aksi */
-    .order-item-action { flex-shrink: 0; }
-    .btn-lihat-qr {
-        display: inline-block;
-        padding: 10px 18px;
-        background: #1b4332;
-        color: #fff;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: background 0.2s;
-        white-space: nowrap;
-    }
-    .btn-lihat-qr:hover { background: #2d6a4f; }
-    .btn-pesan-lagi {
-        display: inline-block;
-        padding: 10px 18px;
-        background: #d1fae5;
-        color: #065f46;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: background 0.2s;
-        white-space: nowrap;
-    }
-    .btn-pesan-lagi:hover { background: #a7f3d0; }
-
-    /* Empty state */
-    .empty-state {
-        text-align: center;
-        padding: 80px 20px;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    }
-    .empty-icon { font-size: 64px; margin-bottom: 16px; }
-    .empty-state h2 { font-family: 'Poppins', sans-serif; color: #1b4332; margin-bottom: 8px; }
-    .empty-state p { color: #64748b; margin-bottom: 24px; }
-
-    @media (max-width: 600px) {
-        .order-item { flex-direction: column; align-items: flex-start; }
-        .order-item-action { width: 100%; }
-        .btn-lihat-qr, .btn-pesan-lagi { width: 100%; text-align: center; }
-    }
-    </style>
 
 </body>
 </html>

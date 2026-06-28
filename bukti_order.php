@@ -35,6 +35,7 @@ $st = $status_label[$order['status']] ?? $status_label['pending'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukti Pesanan | Omah Outdoor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/order.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
@@ -48,6 +49,11 @@ $st = $status_label[$order['status']] ?? $status_label['pending'];
                 <li><a href="riwayat_order.php">Riwayat Order</a></li>
                 <li><a href="logout.php" class="btn-logout">Logout</a></li>
             </ul>
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 

@@ -1,3 +1,36 @@
+// ============================================================
+// HAMBURGER MENU — Toggle mobile navigation
+// ============================================================
+function toggleMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    const hamburger = document.querySelector('.hamburger');
+    if (!navLinks || !hamburger) return;
+    navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active');
+}
+
+// Tutup menu saat klik di luar navbar
+document.addEventListener('click', function (e) {
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelector('.nav-links');
+    const hamburger = document.querySelector('.hamburger');
+    if (!navbar || !navLinks || !hamburger) return;
+    if (!navbar.contains(e.target)) {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('active');
+    }
+});
+
+// Tutup menu saat klik salah satu link
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.nav-links a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            document.querySelector('.nav-links')?.classList.remove('open');
+            document.querySelector('.hamburger')?.classList.remove('active');
+        });
+    });
+});
+
 // =========================================
 // NAVBAR: Scroll-aware color change
 // Khusus index.php: transparan → solid saat scroll

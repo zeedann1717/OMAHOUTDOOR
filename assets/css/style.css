@@ -1,4 +1,8 @@
-/* --- RESET & VARIABLES --- */
+/* ============================================================
+   OMAH OUTDOOR — Main Stylesheet
+   ============================================================ */
+
+/* --- CSS Variables --- */
 :root {
     --forest: #1b4332;
     --forest-light: #2d6a4f;
@@ -6,15 +10,18 @@
     --cream: #f8f9f3;
     --orange: #ff8c42;
     --white: #ffffff;
-    --primary-blue: #2d6a4f;
-    --secondary-blue: #1b4332;
+    --primary: #2d6a4f;
+    --primary-dark: #1b4332;
     --bg-light: #f8f9f3;
     --text-dark: #1a202c;
     --text-light: #64748b;
     --accent-orange: #ff8c42;
 }
 
-* {
+/* --- Reset --- */
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -44,9 +51,11 @@ h3,
     padding: 0 20px;
 }
 
-/* --- NAVBAR --- */
+/* ============================================================
+   NAVBAR
+   ============================================================ */
 .navbar {
-    background: #1b4332;
+    background: var(--forest);
     position: fixed;
     top: 0;
     width: 100%;
@@ -57,7 +66,6 @@ h3,
         box-shadow 0.4s ease;
 }
 
-/* Khusus halaman index — transparan di atas hero */
 .navbar.navbar-hero {
     background: transparent;
     box-shadow: none;
@@ -67,70 +75,74 @@ h3,
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 70px;
 }
 
 .logo {
-    color: #ffffff;
+    color: var(--white);
     text-decoration: none;
     font-size: 20px;
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .logo span {
-    color: #95d5b2;
+    color: var(--sage);
 }
 
 .nav-links {
     display: flex;
     flex-direction: row;
     list-style: none;
-    gap: 30px;
+    gap: 24px;
     align-items: center;
 }
 
 .nav-links a {
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
+    font-size: 14px;
     font-weight: 500;
     transition: color 0.3s;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
-    color: #95d5b2;
+    color: var(--sage);
 }
 
-/* Link halaman aktif */
 .nav-links a.active {
-    color: #95d5b2;
+    color: var(--sage);
     font-weight: 700;
-    border-bottom: 2px solid #95d5b2;
+    border-bottom: 2px solid var(--sage);
     padding-bottom: 2px;
 }
 
 .btn-login {
-    background-color: #95d5b2;
-    color: #1b4332 !important;
-    padding: 10px 20px;
+    background-color: var(--sage);
+    color: var(--forest) !important;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 600;
+    font-size: 13px;
     transition:
         background-color 0.3s,
         transform 0.2s;
 }
 
 .btn-login:hover {
-    background-color: #ffffff;
-    color: #1b4332 !important;
+    background-color: var(--white);
+    color: var(--forest) !important;
     transform: translateY(-2px);
 }
 
 .btn-logout {
     background-color: #dc3545 !important;
-    color: #ffffff !important;
-    padding: 10px 20px;
+    color: var(--white) !important;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 600;
+    font-size: 13px;
     transition:
         background-color 0.3s,
         transform 0.2s;
@@ -142,24 +154,55 @@ h3,
     transform: translateY(-2px);
 }
 
-/* --- HERO SECTION --- */
+/* Hamburger Button */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+    z-index: 1100;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: var(--white);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
 .hero {
     background:
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('../images/outdoor.jpg');
-
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     min-height: 100vh;
     width: 100%;
-    padding-top: 80px; /* ✅ tambah ini, sesuai tinggi navbar */
-
+    padding-top: 70px;
     display: flex;
     align-items: center;
-
     color: white;
 }
+
 .hero h1 {
     font-size: 48px;
     margin-bottom: 20px;
@@ -169,7 +212,7 @@ h3,
 .hero p {
     font-size: 18px;
     max-width: 700px;
-    margin: 0 auto 40px auto;
+    margin: 0 auto 40px;
     color: #cbd5e1;
 }
 
@@ -177,6 +220,7 @@ h3,
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-primary,
@@ -189,28 +233,27 @@ h3,
 }
 
 .btn-primary {
-    background: #2d6a4f;
+    background: var(--forest-light);
     color: white;
-    transition: 0.3s ease;
 }
-
 .btn-primary:hover {
-    background: #1b4332;
+    background: var(--forest);
     transform: translateY(-2px);
 }
 
 .btn-secondary {
-    border: 2px solid #95d5b2;
+    border: 2px solid var(--sage);
     color: white;
     background: transparent;
 }
-
 .btn-secondary:hover {
-    background: #95d5b2;
-    color: #1b4332;
+    background: var(--sage);
+    color: var(--forest);
 }
 
-/* --- FEATURES / SOLUSI --- */
+/* ============================================================
+   FEATURES
+   ============================================================ */
 .features {
     padding: 80px 0;
     background-color: var(--white);
@@ -223,7 +266,7 @@ h3,
 
 .section-title h2 {
     font-size: 32px;
-    color: var(--primary-blue);
+    color: var(--primary-dark);
     margin-bottom: 10px;
 }
 
@@ -246,31 +289,32 @@ h3,
     transition:
         transform 0.3s,
         box-shadow 0.3s;
+    cursor: pointer;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: var(--secondary-blue);
+    border-color: var(--forest-light);
 }
 
 .feature-card .icon {
     font-size: 40px;
     margin-bottom: 20px;
 }
-
 .feature-card h3 {
     font-size: 20px;
     margin-bottom: 10px;
-    color: var(--primary-blue);
+    color: var(--primary-dark);
 }
-
 .feature-card p {
     color: var(--text-light);
     font-size: 15px;
 }
 
-/* --- CATALOG SECTION --- */
+/* ============================================================
+   CATALOG
+   ============================================================ */
 .catalog {
     padding: 80px 0;
     background-color: var(--bg-light);
@@ -288,11 +332,14 @@ h3,
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     position: relative;
-    transition: transform 0.3s;
+    transition:
+        transform 0.3s,
+        box-shadow 0.3s;
 }
 
 .product-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
 }
 
 .product-badge {
@@ -313,16 +360,29 @@ h3,
 
 .product-img {
     height: 200px;
-    background-color: #e2e8f0;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .product-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Placeholder gambar kosong */
+.product-img::after {
+    content: '🏕️';
+    font-size: 48px;
+    display: none;
+}
+
+.product-img:not(:has(img))::after,
+.product-img img[style*='display: none'] + ::after {
+    display: block;
 }
 
 .product-info {
@@ -332,37 +392,136 @@ h3,
 .product-info h3 {
     font-size: 18px;
     margin-bottom: 5px;
-    color: var(--primary-blue);
+    color: var(--primary-dark);
 }
 
 .product-info .price {
     font-weight: 700;
     color: var(--accent-orange);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.stok-info {
+    display: inline-block;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stok-ada {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+.stok-habis {
+    background: #fdecea;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
 }
 
 .btn-check {
     display: block;
     text-align: center;
-    background: var(--primary-blue);
+    background: var(--forest);
     color: white;
     text-decoration: none;
     padding: 10px;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
-    transition: background 0.3s;
+    font-weight: 600;
+    transition:
+        background 0.3s,
+        transform 0.2s;
 }
 
 .btn-check:hover {
-    background: var(--secondary-blue);
+    background: var(--forest-light);
+    transform: translateY(-1px);
 }
 
-/* --- FOOTER --- */
+.btn-check.disabled {
+    background: #94a3b8 !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   MODAL (POP-UP KEUNGGULAN) — di luar @media agar jalan di semua screen
+   ============================================================ */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: munculPopUp 0.3s ease-out;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--orange);
+}
+
+#modal-body h3 {
+    color: var(--forest);
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+#modal-body p {
+    color: #555;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+@keyframes munculPopUp {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
     background: #081c15;
     color: #d8f3dc;
-    padding: 60px 0 20px 0;
+    padding: 60px 0 20px;
 }
 
 .footer-content {
@@ -376,33 +535,28 @@ h3,
 .footer-brand {
     max-width: 400px;
 }
-
 .footer-brand h3 {
     font-size: 24px;
     margin-bottom: 15px;
     color: var(--accent-orange);
 }
-
 .footer-brand p {
     color: #94a3b8;
 }
 
 .footer-team h4 {
     margin-bottom: 15px;
-    color: var(--secondary-blue);
+    color: var(--sage);
 }
-
 .footer-team ul {
     list-style: none;
     color: #cbd5e1;
 }
-
 .footer-team ul li {
     margin-bottom: 8px;
-    position: relative;
     padding-left: 15px;
+    position: relative;
 }
-
 .footer-team ul li::before {
     content: '•';
     color: var(--accent-orange);
@@ -418,93 +572,77 @@ h3,
     font-size: 14px;
 }
 
-/* --- RESPONSIVE DESIGN (HP) --- */
+/* ============================================================
+   RESPONSIVE — MOBILE FIRST
+   ============================================================ */
 @media (max-width: 768px) {
+    /* Hamburger aktif */
+    .hamburger {
+        display: flex;
+    }
+
+    /* Nav links jadi dropdown */
     .nav-links {
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: var(--forest);
+        padding: 16px 20px 24px;
+        gap: 4px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        border-top: 1px solid rgba(149, 213, 178, 0.2);
     }
 
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .nav-links a:hover {
+        background: rgba(149, 213, 178, 0.15);
+    }
+
+    .btn-login,
+    .btn-logout {
+        display: block;
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    /* Hero */
+    .hero {
+        text-align: center;
+        padding: 100px 20px 60px;
+    }
     .hero h1 {
-        font-size: 36px;
+        font-size: 32px;
     }
-
     .hero-buttons {
         flex-direction: column;
+        align-items: center;
+    }
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
     }
 
     .footer-content {
         flex-direction: column;
-    }
-
-    /* =========================================
-   STYLING UNTUK MODAL (POP-UP) KEUNGGULAN
-   ========================================= */
-
-    /* Background gelap yang nutupin layar penuh */
-    .modal {
-        display: none; /* Disembunyikan secara default */
-        position: fixed; /* Bikin posisinya selalu nempel di layar */
-        z-index: 9999; /* Z-index tinggi biar selalu di paling depan (di atas navbar) */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.6); /* Warna hitam agak transparan */
-        align-items: center; /* Posisikan pop-up di tengah vertikal */
-        justify-content: center; /* Posisikan pop-up di tengah horizontal */
-    }
-
-    /* Kotak putih pop-upnya */
-    .modal-content {
-        background-color: #ffffff;
-        padding: 30px;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 450px;
-        position: relative;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        text-align: center;
-        animation: munculPopUp 0.3s ease-out; /* Animasi mulus saat muncul */
-    }
-
-    /* Tombol silang (X) buat nutup */
-    .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        color: #666;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .close-btn:hover {
-        color: #ff8c00; /* Berubah oren saat disorot mouse */
-    }
-
-    /* Biar teks di dalam pop-up rapi */
-    #modal-body h3 {
-        color: #1a237e;
-        margin-bottom: 15px;
-        font-size: 22px;
-    }
-
-    #modal-body p {
-        color: #555;
-        line-height: 1.6;
-        font-size: 15px;
-    }
-
-    /* Animasi Muncul Mulus */
-    @keyframes munculPopUp {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
     }
 }

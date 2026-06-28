@@ -13,10 +13,10 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Alat | Omah Outdoor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<style>
+    <style>
   body {
     background-color: #ffffff;
     background-image: url("https://www.transparenttextures.com/patterns/white-wall.png"),
@@ -74,7 +74,8 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
     pointer-events: none;
     opacity: 0.7;
 }
-</style>
+    </style>
+</head>
 <body>
 
     <nav class="navbar">
@@ -95,6 +96,11 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
                 <?php endif; ?>
             </ul>
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 

@@ -27,6 +27,7 @@ elseif ($error === 'gagal') $pesan_error = 'Gagal menyimpan pesanan, coba lagi.'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesan Alat | Omah Outdoor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/order.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
@@ -39,6 +40,11 @@ elseif ($error === 'gagal') $pesan_error = 'Gagal menyimpan pesanan, coba lagi.'
                 <li><a href="katalog.php">← Kembali ke Katalog</a></li>
                 <li><a href="logout.php" class="btn-logout">Logout</a></li>
             </ul>
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 

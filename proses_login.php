@@ -20,7 +20,8 @@ if (mysqli_num_rows($result) > 0) {
         if ($row['role'] === 'admin') {
             echo "<script>alert('Selamat datang, Admin!'); window.location='dashboard_admin.php';</script>";
         } else {
-            echo "<script>alert('Login Sukses, Bre!'); window.location='index.php';</script>";
+            $redirect_url = (isset($_POST['redirect']) && $_POST['redirect'] === 'katalog') ? 'katalog.php' : 'index.php';
+            echo "<script>alert('Login Sukses, Bre!'); window.location='$redirect_url';</script>";
         }
     } else {
         echo "<script>alert('Password salah, coba lagi!'); window.location='login.php';</script>";

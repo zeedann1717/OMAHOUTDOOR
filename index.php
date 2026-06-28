@@ -29,6 +29,9 @@ session_start();
                     <?php endif; ?>
                     <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
+                    <!-- Menu untuk Guest (belum login) -->
+                    <li><a href="keunggulan.php">Keunggulan</a></li>
+                    <li><a href="katalog.php">Katalog</a></li>
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
                 <?php endif; ?>
             </ul>
@@ -48,13 +51,13 @@ session_start();
             <div class="hero-buttons">
 
                 <?php if(isset($_SESSION['email'])) : ?>
-                    <!-- Tombol Kalau SUDAH Login (Langsung pindah halaman) -->
+                    <!-- Tombol Kalau SUDAH Login -->
                     <a href="katalog.php" class="btn-primary">Lihat Katalog</a>
                     <a href="keunggulan.php" class="btn-secondary">Cara Kerja</a>
                 <?php else : ?>
-                    <!-- Tombol Kalau BELUM Login (Muncul Alert JS) -->
-                    <a href="login.php" onclick="alert('Silakan Login atau Daftar akun terlebih dahulu untuk melihat Katalog kami!');" class="btn-primary">Lihat Katalog</a>
-                    <a href="login.php" onclick="alert('Silakan Login atau Daftar akun terlebih dahulu untuk melihat Cara Kerja!');" class="btn-secondary">Cara Kerja</a>
+                    <!-- Guest langsung ke katalog, login baru diminta saat mau pesan -->
+                    <a href="katalog.php" class="btn-primary">Lihat Katalog</a>
+                    <a href="keunggulan.php" class="btn-secondary">Cara Kerja</a>
                 <?php endif; ?>
 
             </div>
@@ -84,6 +87,6 @@ session_start();
         </div>
     </footer>
 
-    <script src="assets/js/script.js?v=2"></script>
+    <script src="assets/js/script.js?v=4"></script>
 </body>
 </html>

@@ -7,6 +7,7 @@ function toggleMenu() {
     if (!navLinks || !hamburger) return;
     navLinks.classList.toggle('open');
     hamburger.classList.toggle('active');
+    document.body.classList.toggle('menu-open');
 }
 
 // Tutup menu saat klik di luar navbar
@@ -18,6 +19,7 @@ document.addEventListener('click', function (e) {
     if (!navbar.contains(e.target)) {
         navLinks.classList.remove('open');
         hamburger.classList.remove('active');
+        document.body.classList.remove('menu-open');
     }
 });
 
@@ -27,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         link.addEventListener('click', function () {
             document.querySelector('.nav-links')?.classList.remove('open');
             document.querySelector('.hamburger')?.classList.remove('active');
+            document.body.classList.remove('menu-open');
         });
     });
 });
@@ -41,6 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (navbar.classList.contains('navbar-hero')) {
         window.addEventListener('scroll', function () {
+            // Tutup hamburger menu saat user scroll (mencegah menu floating)
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            if (navLinks && navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                hamburger?.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
             if (window.scrollY > 80) {
                 navbar.classList.remove('navbar-hero');
             } else {
@@ -77,12 +89,12 @@ function closeModal() {
 }
 
 // Menutup modal jika user klik di luar area konten modal
-window.onclick = function (event) {
+window.addEventListener('click', function (event) {
     const modal = document.getElementById('featureModal');
     if (event.target == modal) {
         closeModal();
     }
-};
+});
 
 // Fungsi pindah tab Login/Daftar
 function switchForm(type) {

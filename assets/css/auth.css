@@ -36,7 +36,10 @@ body {
 }
 
 .auth-box {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -69,6 +72,7 @@ body {
     background: var(--white);
     color: var(--forest);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
 }
 
 /* Header */

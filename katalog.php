@@ -2,6 +2,8 @@
 session_start();
 require_once 'koneksi.php';
 
+$is_logged_in = isset($_SESSION['email']);
+
 // Cek dulu apakah tabel produk sudah ada
 $cek_tabel     = mysqli_query($conn, "SHOW TABLES LIKE 'produk'");
 $tabel_ada     = $cek_tabel && mysqli_num_rows($cek_tabel) > 0;
@@ -93,6 +95,8 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
                     <li><a href="logout.php" class="btn-logout">Logout</a></li>
                 <?php else : ?>
                     <li><a href="index.php">Beranda</a></li>
+                    <li><a href="keunggulan.php">Keunggulan</a></li>
+                    <li><a href="katalog.php" class="active">Katalog</a></li>
                     <li><a href="login.php" class="btn-login">Login / Daftar</a></li>
                 <?php endif; ?>
             </ul>
@@ -145,9 +149,24 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         <?= strtolower($produk['status']) === 'tersedia' ? 'Barang Tersedia' : 'Sedang Disewa' ?>
     </p>
 
-    <a href="<?= strtolower($produk['status']) === 'tersedia' ? 'pesan.php?produk_id=' . $produk['id'] : '#' ?>"
-       class="btn-check <?= strtolower($produk['status']) !== 'tersedia' ? 'disabled' : '' ?>">
-        <?= strtolower($produk['status']) === 'tersedia' ? 'Sewa Sekarang' : 'Sedang Disewa' ?>
+    <?php
+        // Tentukan URL tombol berdasarkan status login & stok
+        if (strtolower($produk['status']) !== 'tersedia') {
+            $btn_href  = '#';
+            $btn_class = 'btn-check disabled';
+            $btn_text  = 'Sedang Disewa';
+        } elseif ($is_logged_in) {
+            $btn_href  = 'pesan.php?produk_id=' . $produk['id'];
+            $btn_class = 'btn-check';
+            $btn_text  = 'Sewa Sekarang';
+        } else {
+            $btn_href  = 'login.php?redirect=katalog';
+            $btn_class = 'btn-check btn-guest';
+            $btn_text  = '🔒 Login untuk Sewa';
+        }
+    ?>
+    <a href="<?= $btn_href ?>" class="<?= $btn_class ?>">
+        <?= $btn_text ?>
     </a>
 </div>
         </div>
@@ -169,6 +188,6 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
         </div>
     </footer>
 
-    <script src="assets/js/script.js?v=3"></script>
+    <script src="assets/js/script.js?v=4"></script>
 </body>
 </html>

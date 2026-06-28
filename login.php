@@ -1,3 +1,6 @@
+<?php
+$redirect = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : '';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,13 +29,14 @@
 
             <!-- FORM LOGIN -->
             <form id="form-login" class="auth-form" action="proses_login.php" method="POST">
+                <input type="hidden" name="redirect" value="<?= $redirect ?>">
                 <div class="input-group">
                     <label for="email-login">Email</label>
-                    <input type="email" id="email-login" name="email" placeholder="Contoh: 123@email.com" required>
+                    <input type="email" id="email-login" name="email" placeholder="Contoh: 123@email.com" autocomplete="email" required>
                 </div>
                 <div class="input-group">
                     <label for="password-login">Password</label>
-                    <input type="password" id="password-login" name="password" placeholder="Masukkan password" required>
+                    <input type="password" id="password-login" name="password" placeholder="Masukkan password" autocomplete="current-password" required>
                     <!-- Checkbox Lihat Password untuk Login -->
                     <div style="margin-top: 8px; display: flex; align-items: center; gap: 5px;">
                         <input type="checkbox" id="show-pass-login" onclick="lihatPassword('password-login')" style="width: auto; cursor: pointer;">
@@ -48,21 +52,22 @@
 
             <!-- FORM DAFTAR -->
             <form id="form-register" class="auth-form hidden" action="proses_daftar.php" method="POST">
+                <input type="hidden" name="redirect" value="<?= $redirect ?>">
                 <div class="input-group">
                     <label for="name-reg">Nama Lengkap</label>
-                    <input type="text" id="name-reg" name="nama" placeholder="Nama sesuai KTP" required>
+                    <input type="text" id="name-reg" name="nama" placeholder="Nama sesuai KTP" autocomplete="name" required>
                 </div>
                 <div class="input-group">
                     <label for="email-reg">Email</label>
-                    <input type="email" id="email-reg" name="email" placeholder="123@email.com" required>
+                    <input type="email" id="email-reg" name="email" placeholder="123@email.com" autocomplete="email" required>
                 </div>
                 <div class="input-group">
                     <label for="phone-reg">Nomor WhatsApp</label>
-                    <input type="tel" id="phone-reg" name="no_wa" placeholder="0812xxxx" required>
+                    <input type="tel" id="phone-reg" name="no_wa" placeholder="0812xxxx" autocomplete="tel" required>
                 </div>
                 <div class="input-group">
                     <label for="password-reg">Password Baru</label>
-                    <input type="password" id="password-reg" name="password" placeholder="Minimal 8 karakter" required>
+                    <input type="password" id="password-reg" name="password" placeholder="Minimal 8 karakter" autocomplete="new-password" required>
                     <!-- Checkbox Lihat Password untuk Daftar -->
                     <div style="margin-top: 8px; display: flex; align-items: center; gap: 5px;">
                         <input type="checkbox" id="show-pass-reg" onclick="lihatPassword('password-reg')" style="width: auto; cursor: pointer;">
@@ -77,6 +82,6 @@
             </div>
         </div>
     </div>
-    <script src="assets/js/script.js?v=1"></script>
+    <script src="assets/js/script.js?v=4"></script>
 </body>
 </html>

@@ -18,8 +18,10 @@ $res = mysqli_query($conn, $query);
 if (!$res || mysqli_num_rows($res) === 0) { header('Location: katalog.php'); exit; }
 $order = mysqli_fetch_assoc($res);
 
-$qr_data = urlencode('OMAH OUTDOOR | Kode: ' . $order['kode_order'] . ' | ' . $order['nama_produk'] . ' | ' . date('d/m/Y', strtotime($order['tanggal_mulai'])) . ' - ' . date('d/m/Y', strtotime($order['tanggal_selesai'])));
-$qr_url  = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . $qr_data;
+$qr_text = 'OMAH OUTDOOR | Kode: ' . $order['kode_order'] . ' | ' . $order['nama_produk'] . ' | ' . date('d/m/Y', strtotime($order['tanggal_mulai'])) . ' - ' . date('d/m/Y', strtotime($order['tanggal_selesai']));
+$qr_data = rawurlencode($qr_text);
+$qr_url_primary = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . $qr_data;
+$qr_url_fallback = 'https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=' . $qr_data;
 
 $status_label = [
     'pending'      => ['label' => '⏳ Menunggu Konfirmasi', 'class' => 'status-pending'],
@@ -72,7 +74,14 @@ $st = $status_label[$order['status']] ?? $status_label['pending'];
             <div class="qr-card">
                 <p class="qr-label">QR Code Pesanan</p>
                 <div class="qr-wrap">
-                    <img src="<?= $qr_url ?>" alt="QR Code <?= $order['kode_order'] ?>">
+                    <img id="qr-image"
+                         src="<?= $qr_url_primary ?>"
+                         alt="QR Code <?= $order['kode_order'] ?>"
+                         onerror="this.onerror=null; this.style.display='none'; document.getElementById('qr-fallback').style.display='block'; this.src='<?= $qr_url_fallback ?>'; this.style.display='block';">
+                    <div id="qr-fallback" class="qr-fallback" style="display:none;">
+                        QR Code gagal dimuat.<br>
+                        <small>Silakan refresh halaman.</small>
+                    </div>
                 </div>
                 <div class="kode-order"><?= $order['kode_order'] ?></div>
                 <span class="status-badge <?= $st['class'] ?>"><?= $st['label'] ?></span>

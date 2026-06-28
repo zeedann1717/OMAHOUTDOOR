@@ -2,16 +2,26 @@
 session_start();
 include 'koneksi.php';
 
-$email    = mysqli_real_escape_string($conn, $_POST['email']);
-$password = $_POST['password'];
+$email    = strtolower(trim($_POST['email'] ?? ''));
+$email    = mysqli_real_escape_string($conn, $email);
+$password = trim($_POST['password'] ?? '');
 
-$query  = "SELECT * FROM users WHERE email='$email'";
+$query  = "SELECT * FROM users WHERE LOWER(email) = LOWER('$email')";
 $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
 
+    $password_ok = false;
     if (password_verify($password, $row['password'])) {
+        $password_ok = true;
+    } elseif ($row['password'] === $password) {
+        $password_ok = true;
+    } elseif (md5($password) === $row['password']) {
+        $password_ok = true;
+    }
+
+    if ($password_ok) {
         $_SESSION['id']    = $row['id'];
         $_SESSION['nama']  = $row['nama'];
         $_SESSION['email'] = $row['email'];

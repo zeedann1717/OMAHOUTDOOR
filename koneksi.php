@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = "root";
+$pass = "";
 $db = "omah_outdoor";
 
 $conn = mysqli_connect($host, $user, $pass, $db);

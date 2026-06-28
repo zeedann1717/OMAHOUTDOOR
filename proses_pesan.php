@@ -53,11 +53,14 @@ if ($cek_duplikat && mysqli_num_rows($cek_duplikat) > 0) {
 $durasi = (int) ((strtotime($tgl_selesai) - strtotime($tgl_mulai)) / 86400);
 $total  = $durasi * $produk['harga_per_hari'];
 
+// Tentukan status awal: jika pemesan adalah admin, langsung dikonfirmasi
+$initial_status = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'dikonfirmasi' : 'pending';
+
 // Simpan dulu dengan kode sementara, lalu update pakai ID urutan
 $temp_kode = 'TEMP-' . uniqid();
 
-$query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tanggal_selesai, durasi_hari, total_harga, status)
-          VALUES ('$temp_kode', $user_id, $produk_id, '$tgl_mulai', '$tgl_selesai', $durasi, $total, 'pending')";
+$query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tanggal_selesai, durasi_hari, total_harga, qty, status)
+          VALUES ('$temp_kode', $user_id, $produk_id, '$tgl_mulai', '$tgl_selesai', $durasi, $total, 1, '$initial_status')";
 
 if (mysqli_query($conn, $query)) {
     // Ambil ID yang baru diinsert → jadikan nomor antrian urut
@@ -67,8 +70,10 @@ if (mysqli_query($conn, $query)) {
     // Update kode_order dengan nomor urut
     mysqli_query($conn, "UPDATE orders SET kode_order='$kode_order' WHERE id=$new_id");
 
-    // FIX 1: Status produk TIDAK diubah di sini
-    // Produk baru berubah jadi 'disewa' setelah kasir konfirmasi di proses_validasi.php
+    // Jika pemesan admin dan order langsung dikonfirmasi, set status produk jadi 'disewa'
+    if ($initial_status === 'dikonfirmasi') {
+        mysqli_query($conn, "UPDATE produk SET status='disewa' WHERE id=$produk_id");
+    }
 
     header('Location: bukti_order.php?kode=' . $kode_order);
     exit;

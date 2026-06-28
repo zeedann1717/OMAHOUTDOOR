@@ -123,7 +123,8 @@ $status_label = [
                         <tr><td>Durasi</td><td><?= $order['durasi_hari'] ?> hari</td></tr>
                         <tr class="row-total"><td>Total</td><td><strong>Rp <?= number_format($order['total_harga'], 0, ',', '.') ?></strong></td></tr>
                         <tr><td>Status</td>
-                            <td><span class="status-badge <?= $status_label[$order['status']]['class'] ?>"><?= $status_label[$order['status']]['label'] ?></span></td>
+                            <?php $st = $status_label[$order['status']] ?? ['label' => htmlspecialchars(ucfirst($order['status'] ?? '-')), 'class' => 'status-unknown']; ?>
+                            <td><span class="status-badge <?= $st['class'] ?>"><?= $st['label'] ?></span></td>
                         </tr>
                     </table>
 
@@ -177,7 +178,7 @@ $status_label = [
                         </thead>
                         <tbody>
                         <?php while ($o = mysqli_fetch_assoc($all_orders)) : ?>
-                            <?php $st2 = $status_label[$o['status']]; ?>
+                            <?php $st2 = $status_label[$o['status']] ?? ['label' => htmlspecialchars(ucfirst($o['status'] ?? '-')), 'class' => 'status-unknown']; ?>
                             <tr>
                                 <td><strong><?= $o['kode_order'] ?></strong></td>
                                 <td><?= htmlspecialchars($o['nama_user']) ?></td>

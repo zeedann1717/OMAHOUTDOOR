@@ -100,6 +100,11 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
 
     <section id="katalog" class="catalog" style="padding-top: 100px;">
         <div class="container">
+            <?php if(isset($_GET['error']) && $_GET['error'] === 'produk_disewa') : ?>
+            <div style="background:#fee2e2; color:#991b1b; padding:14px 20px; border-radius:10px; margin-bottom:20px; font-weight:600;">
+                ⚠️ Produk yang kamu pilih sedang disewa orang lain. Silakan pilih produk lain.
+            </div>
+            <?php endif; ?>
             <div class="section-title">
                 <h2>Katalog Perlengkapan</h2>
                 <p>Pilih alat terbaik untuk petualanganmu. Stok selalu terupdate secara real-time.</p>

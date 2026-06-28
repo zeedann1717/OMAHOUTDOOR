@@ -31,6 +31,24 @@ if (!$res_produk || mysqli_num_rows($res_produk) === 0) {
 }
 $produk = mysqli_fetch_assoc($res_produk);
 
+// FIX 2: Cek status produk di backend — tolak jika sedang disewa
+if ($produk['status'] === 'disewa') {
+    header('Location: katalog.php?error=produk_disewa');
+    exit;
+}
+
+// FIX 3: Cek apakah user sudah punya order aktif untuk produk yang sama
+$cek_duplikat = mysqli_query($conn,
+    "SELECT id FROM orders
+     WHERE user_id=$user_id
+     AND produk_id=$produk_id
+     AND status IN ('pending','dikonfirmasi')"
+);
+if ($cek_duplikat && mysqli_num_rows($cek_duplikat) > 0) {
+    header('Location: pesan.php?produk_id=' . $produk_id . '&error=sudah_pesan');
+    exit;
+}
+
 // Hitung durasi dan total harga
 $durasi = (int) ((strtotime($tgl_selesai) - strtotime($tgl_mulai)) / 86400);
 $total  = $durasi * $produk['harga_per_hari'];
@@ -44,13 +62,13 @@ $query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tan
 if (mysqli_query($conn, $query)) {
     // Ambil ID yang baru diinsert → jadikan nomor antrian urut
     $new_id     = mysqli_insert_id($conn);
-    $kode_order = 'ORD-' . str_pad($new_id, 4, '0', STR_PAD_LEFT); // ORD-0001, ORD-0002, dst
+    $kode_order = 'ORD-' . str_pad($new_id, 4, '0', STR_PAD_LEFT);
 
     // Update kode_order dengan nomor urut
     mysqli_query($conn, "UPDATE orders SET kode_order='$kode_order' WHERE id=$new_id");
 
-    // Update status produk jadi disewa
-    mysqli_query($conn, "UPDATE produk SET status='disewa' WHERE id=$produk_id");
+    // FIX 1: Status produk TIDAK diubah di sini
+    // Produk baru berubah jadi 'disewa' setelah kasir konfirmasi di proses_validasi.php
 
     header('Location: bukti_order.php?kode=' . $kode_order);
     exit;

@@ -53,7 +53,7 @@ CREATE TABLE `produk` (
 INSERT INTO `produk` (`nama_produk`, `harga_per_hari`, `status`, `gambar`) VALUES
 ('Tenda Dome Kap. 4',    35000, 'tersedia', 'Tenda Dome Kap. 4.jpg'),
 ('Carrier 60L',          25000, 'tersedia', 'Carrier 60L.jpg'),
-('Sleeping Bag Polar Bulu', 10000, 'disewa', 'Sleeping Bag Polar Bulu.jpeg'),
+('Sleeping Bag Polar Bulu', 10000, 'disewa', 'Sleeping Bag Polar Bulu.jpg'),
 ('Sepatu Gunung',        20000, 'tersedia', 'Sepatu Gunung.jpg'),
 ('Kompor Portable',      15000, 'tersedia', 'Kompor Portable.jpg'),
 ('Matras Foil Aluminium', 5000, 'tersedia', 'Matras Foil Aluminium.jpg');

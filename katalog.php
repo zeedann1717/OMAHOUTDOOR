@@ -136,7 +136,7 @@ $result_produk = $tabel_ada ? mysqli_query($conn, "SELECT * FROM produk ORDER BY
             <div class="product-img">
                 <img src="assets/images/<?= htmlspecialchars($produk['gambar']) ?>"
                      alt="<?= htmlspecialchars($produk['nama_produk']) ?>"
-                     onerror="this.style.display='none'">
+                     onerror="if (!this.dataset.fallback) { this.dataset.fallback = 'true'; this.src = this.src.replace(/\.jpe?g$/i, '.jpg'); return; } this.style.display='none';">
             </div>
            <div class="product-info">
     <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>

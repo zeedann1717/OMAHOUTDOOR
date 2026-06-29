@@ -1,4 +1,9 @@
 <?php
+// Pastikan session sudah berjalan jika cek_login.php tidak memanggil session_start()
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'cek_login.php';
 require_once 'koneksi.php';
 
@@ -12,13 +17,14 @@ $produk_id   = (int) $_POST['produk_id'];
 $tgl_mulai   = $_POST['tanggal_mulai'];
 $tgl_selesai = $_POST['tanggal_selesai'];
 
-// Validasi tanggal
+// Validasi tanggal kosong
 if (empty($tgl_mulai) || empty($tgl_selesai)) {
     header('Location: pesan.php?produk_id=' . $produk_id . '&error=tanggal_kosong');
     exit;
 }
 
-if (strtotime($tgl_selesai) <= strtotime($tgl_mulai)) {
+// Validasi jika tanggal selesai lebih lampau dari tanggal mulai
+if (strtotime($tgl_selesai) < strtotime($tgl_mulai)) {
     header('Location: pesan.php?produk_id=' . $produk_id . '&error=tanggal_salah');
     exit;
 }
@@ -31,13 +37,13 @@ if (!$res_produk || mysqli_num_rows($res_produk) === 0) {
 }
 $produk = mysqli_fetch_assoc($res_produk);
 
-// FIX 2: Cek status produk di backend — tolak jika sedang disewa
+// Cek status produk di backend — tolak jika sedang disewa
 if ($produk['status'] === 'disewa') {
     header('Location: katalog.php?error=produk_disewa');
     exit;
 }
 
-// FIX 3: Cek apakah user sudah punya order aktif untuk produk yang sama
+// Cek apakah user sudah punya order aktif untuk produk yang sama
 $cek_duplikat = mysqli_query($conn,
     "SELECT id FROM orders
      WHERE user_id=$user_id
@@ -49,19 +55,23 @@ if ($cek_duplikat && mysqli_num_rows($cek_duplikat) > 0) {
     exit;
 }
 
-// Hitung durasi dan total harga
+// Hitung durasi dan total harga (PERBAIKAN: minimal sewa dihitung 1 hari)
 $durasi = (int) ((strtotime($tgl_selesai) - strtotime($tgl_mulai)) / 86400);
-$total  = $durasi * $produk['harga_per_hari'];
+if ($durasi < 1) {
+    $durasi = 1; 
+}
+$total = $durasi * $produk['harga_per_hari'];
 
 // Tentukan status awal: jika pemesan adalah admin, langsung dikonfirmasi
 $initial_status = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'dikonfirmasi' : 'pending';
 
-// Simpan dulu dengan kode sementara, lalu update pakai ID urutan
+// Simpan dulu dengan kode sementara
 $temp_kode = 'TEMP-' . uniqid();
 
 $query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tanggal_selesai, durasi_hari, total_harga, qty, status)
           VALUES ('$temp_kode', $user_id, $produk_id, '$tgl_mulai', '$tgl_selesai', $durasi, $total, 1, '$initial_status')";
 
+// Eksekusi query utama
 if (mysqli_query($conn, $query)) {
     // Ambil ID yang baru diinsert → jadikan nomor antrian urut
     $new_id     = mysqli_insert_id($conn);
@@ -75,10 +85,17 @@ if (mysqli_query($conn, $query)) {
         mysqli_query($conn, "UPDATE produk SET status='disewa' WHERE id=$produk_id");
     }
 
+    // Sukses, alihkan ke bukti order
     header('Location: bukti_order.php?kode=' . $kode_order);
     exit;
 } else {
-    header('Location: pesan.php?produk_id=' . $produk_id . '&error=gagal');
+    // MENAMPILKAN ERROR ASLI JIKA DATABASE MENOLAK
+    echo "<div style='background: #ffcccc; padding: 20px; border: 1px solid red; font-family: sans-serif;'>";
+    echo "<h3>🚨 Gagal Menyimpan ke Database!</h3>";
+    echo "<b>Pesan Error dari MySQL:</b> <br>" . mysqli_error($conn) . "<br><br>";
+    echo "<b>Query yang dikirim:</b> <br><code>" . $query . "</code><br><br>";
+    echo "<i>Silakan screenshot pesan ini dan cocokkan nama kolom di atas dengan yang ada di phpMyAdmin (tabel orders).</i>";
+    echo "</div>";
     exit;
 }
 ?>

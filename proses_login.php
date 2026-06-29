@@ -13,6 +13,8 @@ if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
 
     $password_ok = false;
+    
+    // Cek kecocokan password (mendukung Hash Bcrypt, Plain Text, dan MD5)
     if (password_verify($password, $row['password'])) {
         $password_ok = true;
     } elseif ($row['password'] === $password) {
@@ -22,16 +24,26 @@ if (mysqli_num_rows($result) > 0) {
     }
 
     if ($password_ok) {
+        // Daftarkan data ke Session sesuai dengan nama kolom di database
         $_SESSION['id']    = $row['id'];
-        $_SESSION['nama']  = $row['nama'];
+        $_SESSION['nama']  = $row['Nama']; // Perbaikan: Sesuaikan dengan huruf 'N' besar di database
         $_SESSION['email'] = $row['email'];
         $_SESSION['role']  = $row['role'];
 
+        // Cek Pangkat / Role yang login
         if ($row['role'] === 'admin') {
-            echo "<script>alert('Selamat datang, Admin!'); window.location='dashboard_admin.php';</script>";
+            // Karena dashboard_admin.php belum ada, kita arahkan ke katalog dulu
+            echo "<script>
+                    alert('Selamat datang, Admin Omah Outdoor!'); 
+                    window.location='katalog.php';
+                  </script>";
         } else {
+            // Jika yang login adalah user/pembeli biasa
             $redirect_url = (isset($_POST['redirect']) && $_POST['redirect'] === 'katalog') ? 'katalog.php' : 'index.php';
-            echo "<script>alert('Login Sukses, Bre!'); window.location='$redirect_url';</script>";
+            echo "<script>
+                    alert('Login Sukses, Bre!'); 
+                    window.location='$redirect_url';
+                  </script>";
         }
     } else {
         echo "<script>alert('Password salah, coba lagi!'); window.location='login.php';</script>";

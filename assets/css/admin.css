@@ -132,7 +132,37 @@ body.admin-body {
     background: rgba(239, 68, 68, 0.15);
     color: #f87171;
 }
+.stok-control{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
 
+.stok-value{
+    min-width:30px;
+    text-align:center;
+    font-weight:600;
+}
+
+.btn-plus, .btn-minus{
+    width:26px;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+    color:white;
+}
+
+.btn-plus{
+    background:#22c55e;
+}
+
+.btn-minus{
+    background:#ef4444;
+}
 /* ============================
    MAIN CONTENT
    ============================ */

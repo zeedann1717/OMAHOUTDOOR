@@ -68,8 +68,8 @@ $initial_status = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 
 // Simpan dulu dengan kode sementara
 $temp_kode = 'TEMP-' . uniqid();
 
-$query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tanggal_selesai, durasi_hari, total_harga, qty, status)
-          VALUES ('$temp_kode', $user_id, $produk_id, '$tgl_mulai', '$tgl_selesai', $durasi, $total, 1, '$initial_status')";
+$query = "INSERT INTO orders (kode_order, user_id, produk_id, tanggal_mulai, tanggal_selesai, durasi_hari, total_harga, status)
+          VALUES ('$temp_kode', $user_id, $produk_id, '$tgl_mulai', '$tgl_selesai', $durasi, $total, '$initial_status')";
 
 // Eksekusi query utama
 if (mysqli_query($conn, $query)) {

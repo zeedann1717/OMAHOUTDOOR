@@ -2,18 +2,18 @@
 session_start();
 include 'koneksi.php';
 
-$email    = strtolower(trim($_POST['email'] ?? ''));
-$email    = mysqli_real_escape_string($conn, $email);
+$email = strtolower(trim($_POST['email'] ?? ''));
+$email = mysqli_real_escape_string($conn, $email);
 $password = trim($_POST['password'] ?? '');
 
-$query  = "SELECT * FROM users WHERE LOWER(email) = LOWER('$email')";
+$query = "SELECT * FROM users WHERE LOWER(email) = LOWER('$email')";
 $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
 
     $password_ok = false;
-    
+
     // Cek kecocokan password (mendukung Hash Bcrypt, Plain Text, dan MD5)
     if (password_verify($password, $row['password'])) {
         $password_ok = true;
@@ -25,10 +25,10 @@ if (mysqli_num_rows($result) > 0) {
 
     if ($password_ok) {
         // Daftarkan data ke Session sesuai dengan nama kolom di database
-        $_SESSION['id']    = $row['id'];
-        $_SESSION['nama']  = $row['Nama']; // Perbaikan: Sesuaikan dengan huruf 'N' besar di database
+        $_SESSION['id'] = $row['id'];
+        $_SESSION['nama'] = $row['Nama']; // Perbaikan: Sesuaikan dengan huruf 'N' besar di database
         $_SESSION['email'] = $row['email'];
-        $_SESSION['role']  = $row['role'];
+        $_SESSION['role'] = $row['role'];
 
         // Cek Pangkat / Role yang login
         if ($row['role'] === 'admin') {

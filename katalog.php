@@ -23,10 +23,11 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
     <title>Katalog Alat | Omah Outdoor</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .stok-info { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 5px 0; }
+        .stok-info { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 8px 0; }
         .stok-ada { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
         .stok-habis { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
         .btn-admin { margin-top: 10px; display: flex; justify-content: center; gap: 10px; }
+        .btn-check.disabled { background: #ccc; cursor: not-allowed; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -43,7 +44,7 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
             
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
                 <li><a href="kasir.php" style="color: #ffcc80;">Kasir</a></li>
-                <li><a href="tambah_produk.php" style="color: #ffcc80;">+ Produk</a></li>
+                <li><a href="kelola_produk.php" style="color: #ffcc80;">Kelola Produk</a></li>
             <?php endif; ?>
 
             <li><a href="logout.php" class="btn-logout" style="background: #e63946; padding: 8px 15px; border-radius: 5px; color: white; text-decoration: none;">Logout</a></li>
@@ -69,26 +70,30 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
                 <p style="text-align:center; grid-column:1/-1;">Belum ada produk tersedia.</p>
             <?php else : ?>
                 
-                <?php while ($produk = mysqli_fetch_assoc($result_produk)) : ?>
+                <?php while ($produk = mysqli_fetch_assoc($result_produk)) : 
+                    // Logika profesional untuk cek stok dan status
+                    $stok = $produk['jumlah_stok'] ?? 0;
+                    $is_tersedia = ($stok > 0 && strtolower($produk['status']) === 'tersedia');
+                ?>
                 <div class="product-card">
                     <img src="assets/images/<?= htmlspecialchars($produk['gambar']) ?>" alt="Produk" style="width:100%; height:200px; object-fit:cover;">
                     <div class="product-info">
                         <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>
                         <p>Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari</p>
                         
-                        <p class="stok-info <?= strtolower($produk['status']) === 'tersedia' ? 'stok-ada' : 'stok-habis' ?>">
-                            <?= ucfirst($produk['status']) ?>
+                        <p class="stok-info <?= $is_tersedia ? 'stok-ada' : 'stok-habis' ?>">
+                            <?= $is_tersedia ? 'Tersedia (' . $stok . ' Unit)' : 'Stok Habis / Disewa' ?>
                         </p>
 
-                        <a href="<?= strtolower($produk['status']) === 'tersedia' ? 'pesan.php?produk_id='.$produk['id'] : '#' ?>" 
-                           class="btn-check <?= strtolower($produk['status']) !== 'tersedia' ? 'disabled' : '' ?>">
-                            <?= strtolower($produk['status']) === 'tersedia' ? 'Sewa Sekarang' : 'Sedang Disewa' ?>
+                        <a href="<?= $is_tersedia ? 'pesan.php?produk_id='.$produk['id'] : '#' ?>" 
+                           class="btn-check <?= !$is_tersedia ? 'disabled' : '' ?>">
+                            <?= $is_tersedia ? 'Sewa Sekarang' : 'Tidak Tersedia' ?>
                         </a>
 
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
                             <div class="btn-admin">
-                                <a href="edit_produk.php?id=<?= $produk['id'] ?>">✏️ Edit</a>
-                                <a href="hapus_produk.php?id=<?= $produk['id'] ?>" onclick="return confirm('Hapus?')">🗑️ Hapus</a>
+                                <a href="kelola_produk.php?edit=<?= $produk['id'] ?>">✏️ Edit</a>
+                                <a href="proses_produk.php?action=hapus&id=<?= $produk['id'] ?>" onclick="return confirm('Hapus?')">🗑️ Hapus</a>
                             </div>
                         <?php endif; ?>
                     </div>

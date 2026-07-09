@@ -33,7 +33,6 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
 </head>
 <body class="admin-body">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <span class="brand-icon">🏕️</span>
@@ -66,10 +65,8 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="admin-main">
 
-        <!-- TOP BAR -->
         <header class="admin-topbar">
             <div class="topbar-left">
                 <h1 class="page-title">Kelola Produk</h1>
@@ -86,15 +83,12 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
             </div>
         </header>
 
-        <!-- NOTIFIKASI -->
         <?php if ($notif) : ?>
         <div class="notif-bar <?= $notif_class ?>"><?= $notif ?></div>
         <?php endif; ?>
 
-        <!-- LAYOUT 2 KOLOM: FORM KIRI, TABEL KANAN -->
         <div class="produk-layout">
 
-            <!-- FORM TAMBAH / EDIT -->
             <div class="form-card">
                 <h2 class="form-card-title">
                     <?= $edit_data ? '✏️ Edit Produk' : '➕ Tambah Produk Baru' ?>
@@ -117,6 +111,13 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                         <input type="number" name="harga_per_hari" required min="0"
                                value="<?= $edit_data['harga_per_hari'] ?? '' ?>"
                                placeholder="Contoh: 35000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jumlah Stok (Unit)</label>
+                        <input type="number" name="jumlah_stok" required min="0"
+                               value="<?= isset($edit_data['jumlah_stok']) ? $edit_data['jumlah_stok'] : '1' ?>"
+                               placeholder="Contoh: 5">
                     </div>
 
                     <div class="form-group">
@@ -150,7 +151,6 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                 </form>
             </div>
 
-            <!-- TABEL PRODUK -->
             <div class="table-section" style="flex:1; min-width:0;">
                 <div class="table-header">
                     <h2>📋 Daftar Produk</h2>
@@ -164,12 +164,14 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                                 <th>Foto</th>
                                 <th>Nama Produk</th>
                                 <th>Harga/Hari</th>
-                                <th>Status</th>
+                                <th>Stok</th> <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; while ($p = mysqli_fetch_assoc($produk_list)) : ?>
+                            <?php $no = 1; while ($p = mysqli_fetch_assoc($produk_list)) : 
+                                $stok_qty = $p['jumlah_stok'] ?? 0;
+                            ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td>
@@ -180,6 +182,9 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                                 </td>
                                 <td><strong><?= htmlspecialchars($p['nama_produk']) ?></strong></td>
                                 <td>Rp <?= number_format($p['harga_per_hari'], 0, ',', '.') ?></td>
+                                <td style="<?= $stok_qty == 0 ? 'color: red; font-weight: bold;' : '' ?>">
+                                    <?= $stok_qty ?> Unit
+                                </td>
                                 <td>
                                     <span class="status-badge <?= $p['status'] === 'disewa' ? 'disewa' : 'tersedia' ?>">
                                         <?= $p['status'] === 'disewa' ? '🔴 Disewa' : '🟢 Tersedia' ?>
@@ -200,9 +205,7 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                 </div>
             </div>
 
-        </div><!-- end produk-layout -->
-
-    </main>
+        </div></main>
 
 </body>
 </html>

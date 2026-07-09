@@ -87,7 +87,7 @@ http://localhost/OMAHOUTDOOR/login.php
 **Akun Admin (untuk testing):**
 | Field | Value |
 |-------|-------|
-| Email | `maulanazidan4420@gmail.com` |
+| Email | `admin123@gmail.com` |
 | Password | `admin123` |
 
 Kalau bisa login dan masuk ke dashboard → **setup berhasil!** ✅

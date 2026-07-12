@@ -1,66 +1,237 @@
 <?php
-require_once 'cek_admin.php';
-require_once 'koneksi.php';
+/* ============================================================
+   OMAH OUTDOOR - KELOLA PRODUK (DESAIN ASLI & STRUKTUR ASSETS FIX)
+   ============================================================ */
 
-$produk_list   = mysqli_query($conn, "SELECT * FROM produk ORDER BY id ASC");
-$total_produk  = mysqli_num_rows($produk_list);
+require_once 'cek_admin.php'; // Memastikan session admin aktif
+require_once 'koneksi.php';   // Menghubungkan ke database
 
-// Ambil data produk untuk form edit jika ada ?edit=id
-$edit_data = null;
-if (isset($_GET['edit'])) {
-    $edit_id   = (int) $_GET['edit'];
-    $res_edit  = mysqli_query($conn, "SELECT * FROM produk WHERE id=$edit_id");
-    $edit_data = mysqli_fetch_assoc($res_edit);
-}
+// Mengambil data produk dari database
+$query = "SELECT * FROM produk ORDER BY id DESC";
+$result = mysqli_query($conn, $query);
+$total_produk = mysqli_num_rows($result);
 
-// Pesan notifikasi
-$pesan = $_GET['pesan'] ?? '';
-$notif = '';
-$notif_class = '';
-if ($pesan === 'tambah_sukses') { $notif = '✅ Produk berhasil ditambahkan!'; $notif_class = 'notif-sukses'; }
-elseif ($pesan === 'edit_sukses') { $notif = '✅ Produk berhasil diupdate!'; $notif_class = 'notif-sukses'; }
-elseif ($pesan === 'hapus_sukses') { $notif = '🗑️ Produk berhasil dihapus!'; $notif_class = 'notif-hapus'; }
-elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $notif_class = 'notif-gagal'; }
+// Mengambil nama admin untuk profile header
+$nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Produk | Omah Outdoor</title>
-    <link rel="stylesheet" href="assets/css/admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <title>Kelola Produk - Omah Outdoor</title>
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        /* FIX TOTAL: Memaksa halaman pas layar tanpa scroll geser kanan */
+        html, body {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+        }
+
+        .main-content {
+            margin-left: 285px !important;
+            width: calc(100% - 285px) !important;
+            max-width: calc(100% - 285px) !important;
+            padding: 40px !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Mempertahankan susunan ke bawah khas struktur lama Anda */
+        .old-design-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            box-sizing: border-box;
+        }
+
+        /* Tampilan Box putih Form & Tabel bawaan desain asli */
+        .form-card, .table-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 2 Kolom Grid Form Atas */
+        .form-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #EDF0EC;
+            background: #F8FAF8;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        .full-width-group {
+            grid-column: span 2;
+        }
+
+        .btn-submit {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* TABLE AUTO-FIT (Mencegah Kepotong ke Kanan) */
+        .table-responsive {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box;
+            border-radius: 16px;
+            border: 1px solid #EDF0EC;
+            margin-top: 20px;
+        }
+
+        .admin-table {
+            width: 100% !important;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed; /* Kunci kolom agar membagi rata sisa ruang */
+        }
+
+        /* Pengaturan pembagian kolom tabel agar proporsional */
+        .admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: 45px; text-align: center; }
+        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 85px; text-align: center; }
+        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: auto; } 
+        .admin-table th:nth-child(4), .admin-table td:nth-child(4) { width: 150px; }
+        .admin-table th:nth-child(5), .admin-table td:nth-child(5) { width: 130px; }
+        .admin-table th:nth-child(6), .admin-table td:nth-child(6) { width: 190px; text-align: center; }
+
+        .admin-table th, .admin-table td {
+            padding: 16px 15px;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-table th {
+            background: #F8FAF8;
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .admin-table td {
+            border-bottom: 1px solid #EDF0EC;
+            vertical-align: middle;
+        }
+
+        /* UKURAN GAMBAR PAS */
+        .img-thumb { 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 10px; 
+            object-fit: cover; 
+            display: inline-block;
+        }
+
+        .btn-action {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-edit { background: #E7EFFF; color: #2F62D6; }
+        .btn-edit:hover { background: #2F62D6; color: var(--white); }
+        .btn-delete { background: #FEE2E2; color: #DC2626; margin-left: 4px; border: none; cursor: pointer; }
+        .btn-delete:hover { background: #DC2626; color: var(--white); }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .page-title h1 { font-size: 28px; color: var(--primary); font-weight: 800; }
+        .page-title p { font-size: 14px; color: var(--text-light); }
+    </style>
 </head>
-<body class="admin-body">
+<body>
 
     <aside class="sidebar">
-        <div class="sidebar-brand">
-            <span class="brand-icon">🏕️</span>
-            <div>
-                <h2>OMAH</h2>
-                <span>OUTDOOR</span>
-            </div>
+        <div>
+            <a href="dashboard_admin.php" class="logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-mountain-sun"></i>
+                </div>
+                <div class="logo-text">
+                    <h2>OMAH</h2>
+                    <span>OUTDOOR</span>
+                </div>
+            </a>
+            
+            <!-- GANTI BLOK SIDEBAR MENU DI DASHBOARD_ADMIN.PHP DENGAN INI -->
+<div class="sidebar-menu">
+    <!-- Menu Beranda (Di-set ACTIVE karena kita sedang berada di halaman beranda/dashboard) -->
+    <a href="dashboard_admin.php" class="menu active"><i class="fa-solid fa-gauge-high"></i><span>Beranda</span></a>
+    
+    <!-- Link ke Katalog -->
+    <a href="katalog.php" class="menu"><i class="fa-solid fa-images"></i><span>Lihat Katalog</span></a>
+    
+    <!-- Link ke Kelola Produk -->
+    <a href="kelola_produk.php" class="menu"><i class="fa-solid fa-box-open"></i><span>Kelola Produk</span></a>
+    
+    <!-- Link ke Validasi Order -->
+    <a href="validasi_order.php" class="menu"><i class="fa-solid fa-clipboard-check"></i><span>Validasi Order</span></a>
+    
+    <!-- Link ke Laporan Keuangan -->
+    <a href="laporan.php" class="menu"><i class="fa-solid fa-file-invoice"></i><span>Laporan</span></a>
+</div>
         </div>
-        <nav class="sidebar-nav">
-            <a href="dashboard_admin.php" class="nav-item">
-                <span class="nav-icon">📊</span> Dashboard
-            </a>
-            <a href="#section-users" class="nav-item" onclick="window.location='dashboard_admin.php#section-users'">
-                <span class="nav-icon">👥</span> Data User
-            </a>
-            <a href="kelola_produk.php" class="nav-item active">
-                <span class="nav-icon">📦</span> Kelola Produk
-            </a>
-            <a href="katalog.php" class="nav-item">
-                <span class="nav-icon">🛍️</span> Lihat Katalog
-            </a>
-            <a href="index.php" class="nav-item">
-                <span class="nav-icon">🏠</span> Ke Beranda
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="logout.php" class="btn-sidebar-logout">
-                <span>🚪</span> Logout
+
+        <div>
+            <div class="camp-card">
+                <i class="fa-solid fa-tent"></i>
+                <h4>Adventure Mode</h4>
+                <p>Sistem Siap Digunakan</p>
+            </div>
+            <a href="logout.php" class="logout-btn">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Keluar</span>
             </a>
         </div>
     </aside>
@@ -72,16 +243,7 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                 <h1 class="page-title">Kelola Produk</h1>
                 <p class="page-subtitle">Tambah, edit, atau hapus produk katalog</p>
             </div>
-            <div class="topbar-right">
-                <div class="admin-badge">
-                    <span class="badge-avatar">👤</span>
-                    <div>
-                        <p class="badge-name"><?= htmlspecialchars($_SESSION['nama'] ?? 'Admin') ?></p>
-                        <span class="badge-role">Administrator</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+        </div>
 
         <?php if ($notif) : ?>
         <div class="notif-bar <?= $notif_class ?>"><?= $notif ?></div>
@@ -136,27 +298,17 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                                  alt="Foto saat ini" onerror="this.style.display='none'">
                             <small>Foto saat ini</small>
                         </div>
-                        <?php endif; ?>
-                        <input type="file" name="gambar" accept="image/*">
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-simpan">
-                            <?= $edit_data ? '💾 Simpan Perubahan' : '➕ Tambah Produk' ?>
-                        </button>
-                        <?php if ($edit_data) : ?>
-                        <a href="kelola_produk.php" class="btn-batal">✖ Batal</a>
-                        <?php endif; ?>
                     </div>
                 </form>
             </div>
 
             <div class="table-section" style="flex:1; min-width:0;">
                 <div class="table-header">
-                    <h2>📋 Daftar Produk</h2>
-                    <span class="table-count"><?= $total_produk ?> produk</span>
+                    <h2 style="font-size: 18px; color: var(--primary);"><i class="fa-solid fa-list"></i> Daftar Katalog Alat Outdoor</h2>
+                    <span class="table-badge" style="background: #EEF5F1; color: var(--primary); padding: 6px 14px; border-radius: 50px; font-weight:700; font-size:12px;"><?= $total_produk; ?> Item Terdaftar</span>
                 </div>
-                <div class="table-wrapper">
+                
+                <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -173,12 +325,13 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                                 $stok_qty = $p['jumlah_stok'] ?? 0;
                             ?>
                             <tr>
-                                <td><?= $no++ ?></td>
-                                <td>
-                                    <img src="assets/images/<?= htmlspecialchars($p['gambar']) ?>"
-                                         alt="<?= htmlspecialchars($p['nama_produk']) ?>"
-                                         class="tbl-img"
-                                         onerror="this.src='assets/images/no-image.png'; this.onerror=null;">
+                                <td style="text-align: center;"><?= $no++; ?></td>
+                                <td style="text-align: center;">
+                                    <?php if(!empty($nama_gambar)): ?>
+                                        <img src="assets/images/<?= htmlspecialchars($nama_gambar); ?>" class="img-thumb" alt="Foto">
+                                    <?php else: ?>
+                                        <div class="img-thumb" style="background: #EAECE7; display:flex; align-items:center; justify-content:center; color:#74817B;"><i class="fa-solid fa-image"></i></div>
+                                    <?php endif; ?>
                                 </td>
                                 <td><strong><?= htmlspecialchars($p['nama_produk']) ?></strong></td>
                                 <td>Rp <?= number_format($p['harga_per_hari'], 0, ',', '.') ?></td>
@@ -186,20 +339,29 @@ elseif ($pesan === 'gagal') { $notif = '❌ Terjadi kesalahan, coba lagi.'; $not
                                     <?= $stok_qty ?> Unit
                                 </td>
                                 <td>
-                                    <span class="status-badge <?= $p['status'] === 'disewa' ? 'disewa' : 'tersedia' ?>">
-                                        <?= $p['status'] === 'disewa' ? '🔴 Disewa' : '🟢 Tersedia' ?>
-                                    </span>
+                                    <?php if (isset($row['status']) && strtolower($row['status']) === 'tersedia'): ?>
+                                        <span class="badge admin" style="background:#DFF7E7; color:#227247; padding:6px 12px; font-size:12px; border-radius:50px; font-weight:700; display:inline-block;"><i class="fa-solid fa-circle-check"></i> Tersedia</span>
+                                    <?php else: ?>
+                                        <span class="badge user" style="background:#FEE2E2; color:#DC2626; padding:6px 12px; font-size:12px; border-radius:50px; font-weight:700; display:inline-block;"><i class="fa-solid fa-circle-minus"></i> Disewa</span>
+                                    <?php endif; ?>
                                 </td>
-                                <td>
-                                    <div class="aksi-btns">
-                                        <a href="kelola_produk.php?edit=<?= $p['id'] ?>" class="btn-edit">✏️ Edit</a>
-                                        <a href="proses_produk.php?action=hapus&id=<?= $p['id'] ?>"
-                                           class="btn-hapus"
-                                           onclick="return confirm('Yakin hapus produk ini?')">🗑️ Hapus</a>
-                                    </div>
+                                <td style="text-align: center;">
+                                    <a href="edit_produk.php?id=<?= $row['id']; ?>" class="btn-action btn-edit">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </a>
+                                    <a href="hapus_produk.php?id=<?= $row['id']; ?>" class="btn-action btn-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                        <i class="fa-solid fa-trash-can"></i> Hapus
+                                    </a>
                                 </td>
                             </tr>
-                            <?php endwhile; ?>
+                            <?php 
+                                endwhile; 
+                            else:
+                            ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">Belum ada data produk di katalog.</td>
+                            </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

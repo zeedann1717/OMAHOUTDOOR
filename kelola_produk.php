@@ -1,141 +1,67 @@
 <?php
-/* ============================================================
-   OMAH OUTDOOR - KELOLA PRODUK (DESAIN ASLI & STRUKTUR ASSETS FIX)
-   ============================================================ */
+require_once 'cek_admin.php';
+require_once 'koneksi.php';
 
-require_once 'cek_admin.php'; // Memastikan session admin aktif
-require_once 'koneksi.php';   // Menghubungkan ke database
-
-// Mengambil data produk dari database
-$query = "SELECT * FROM produk ORDER BY id DESC";
-$result = mysqli_query($conn, $query);
+// Ambil semua produk
+$result       = mysqli_query($conn, "SELECT * FROM produk ORDER BY id DESC");
 $total_produk = mysqli_num_rows($result);
 
-// Mengambil nama admin untuk profile header
+// Ambil data produk untuk form edit
+$edit_data = null;
+if (isset($_GET['edit'])) {
+    $edit_id   = (int) $_GET['edit'];
+    $res_edit  = mysqli_query($conn, "SELECT * FROM produk WHERE id=$edit_id");
+    $edit_data = mysqli_fetch_assoc($res_edit);
+}
+
+// Pesan notifikasi
+$pesan = $_GET['pesan'] ?? '';
+$notif = ''; $notif_class = '';
+if ($pesan === 'tambah_sukses') { $notif = '✅ Produk berhasil ditambahkan!'; $notif_class = 'notif-sukses'; }
+elseif ($pesan === 'edit_sukses')   { $notif = '✅ Produk berhasil diupdate!';    $notif_class = 'notif-sukses'; }
+elseif ($pesan === 'hapus_sukses')  { $notif = '🗑️ Produk berhasil dihapus!';    $notif_class = 'notif-hapus';  }
+elseif ($pesan === 'gagal')         { $notif = '❌ Terjadi kesalahan, coba lagi.'; $notif_class = 'notif-gagal';  }
+
 $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Produk - Omah Outdoor</title>
-    <link rel="stylesheet" href="assets/css/admin.css?v=<?= time(); ?>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏕️</text></svg>">
+    <link rel="stylesheet" href="assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    
+
     <style>
-        /* FIX TOTAL: Memaksa halaman pas layar tanpa scroll geser kanan */
-        html, body {
-            max-width: 100% !important;
-            overflow-x: hidden !important;
-        }
+        html, body { max-width: 100%; overflow-x: hidden; }
 
-        .main-content {
-            margin-left: 285px !important;
-            width: calc(100% - 285px) !important;
-            max-width: calc(100% - 285px) !important;
-            padding: 40px !important;
-            box-sizing: border-box !important;
-            overflow-x: hidden !important;
-        }
+        .admin-main { margin-left: 260px; padding: 32px; min-height: 100vh; background: #f0f4f8; }
 
-        /* Mempertahankan susunan ke bawah khas struktur lama Anda */
-        .old-design-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            box-sizing: border-box;
-        }
-
-        /* Tampilan Box putih Form & Tabel bawaan desain asli */
-        .form-card, .table-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* 2 Kolom Grid Form Atas */
-        .form-grid-layout {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #EDF0EC;
-            background: #F8FAF8;
-            font-family: inherit;
-            font-size: 14px;
-            color: var(--text);
-            box-sizing: border-box;
-        }
-
-        .full-width-group {
-            grid-column: span 2;
-        }
-
-        .btn-submit {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--white);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* TABLE AUTO-FIT (Mencegah Kepotong ke Kanan) */
+        /* Tabel */
         .table-responsive {
-            width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box;
-            border-radius: 16px;
+            width: 100%; overflow-x: auto;
+            border-radius: 12px;
             border: 1px solid #EDF0EC;
-            margin-top: 20px;
+            margin-top: 16px;
         }
 
         .admin-table {
-            width: 100% !important;
-            border-collapse: collapse;
-            text-align: left;
-            table-layout: fixed; /* Kunci kolom agar membagi rata sisa ruang */
+            width: 100%; border-collapse: collapse;
+            text-align: left; table-layout: fixed;
         }
 
-        /* Pengaturan pembagian kolom tabel agar proporsional */
-        .admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: 45px; text-align: center; }
-        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 85px; text-align: center; }
-        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: auto; } 
-        .admin-table th:nth-child(4), .admin-table td:nth-child(4) { width: 150px; }
-        .admin-table th:nth-child(5), .admin-table td:nth-child(5) { width: 130px; }
-        .admin-table th:nth-child(6), .admin-table td:nth-child(6) { width: 190px; text-align: center; }
+        .admin-table th:nth-child(1) { width: 44px;  text-align: center; }
+        .admin-table th:nth-child(2) { width: 70px;  text-align: center; }
+        .admin-table th:nth-child(3) { width: auto; }
+        .admin-table th:nth-child(4) { width: 110px; }
+        .admin-table th:nth-child(5) { width: 80px;  text-align: center; }
+        .admin-table th:nth-child(6) { width: 120px; text-align: center; }
+        .admin-table th:nth-child(7) { width: 160px; text-align: center; }
 
         .admin-table th, .admin-table td {
-            padding: 16px 15px;
+            padding: 14px 12px;
             font-size: 14px;
             white-space: nowrap;
             overflow: hidden;
@@ -143,124 +69,232 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
         }
 
         .admin-table th {
-            background: #F8FAF8;
-            color: var(--text-light);
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
+            background: #F8FAF8; color: #74817B;
+            font-weight: 700; font-size: 11px;
+            text-transform: uppercase; letter-spacing: .4px;
         }
 
-        .admin-table td {
-            border-bottom: 1px solid #EDF0EC;
-            vertical-align: middle;
+        .admin-table td { border-bottom: 1px solid #EDF0EC; vertical-align: middle; }
+        .admin-table tbody tr:hover { background: #fafffe; }
+        .admin-table tbody tr:last-child td { border-bottom: none; }
+
+        .img-thumb {
+            width: 46px; height: 46px;
+            border-radius: 10px; object-fit: cover;
+            display: inline-block; border: 1px solid #e2e8f0;
         }
 
-        /* UKURAN GAMBAR PAS */
-        .img-thumb { 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 10px; 
-            object-fit: cover; 
-            display: inline-block;
+        .img-placeholder {
+            width: 46px; height: 46px;
+            border-radius: 10px; background: #EAECE7;
+            display: inline-flex; align-items: center;
+            justify-content: center; color: #74817B;
+            font-size: 18px;
         }
 
+        /* Status badge */
+        .badge-status {
+            padding: 5px 12px; border-radius: 50px;
+            font-size: 12px; font-weight: 700;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .badge-tersedia { background: #DFF7E7; color: #227247; }
+        .badge-disewa   { background: #FEE2E2; color: #DC2626; }
+
+        /* Stok */
+        .stok-ok  { color: #227247; font-weight: 700; }
+        .stok-low { color: #DC2626; font-weight: 700; }
+
+        /* Action buttons */
         .btn-action {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            padding: 7px 12px; border-radius: 8px; font-size: 12px;
+            font-weight: 600; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 5px;
+            transition: all .2s;
+        }
+        .btn-edit   { background: #E7EFFF; color: #2F62D6; }
+        .btn-edit:hover { background: #2F62D6; color: #fff; }
+        .btn-delete {
+            background: #FEE2E2; color: #DC2626;
+            border: none; cursor: pointer; margin-left: 4px;
+        }
+        .btn-delete:hover { background: #DC2626; color: #fff; }
+
+        /* Form card */
+        .form-card {
+            background: #fff; border-radius: 16px;
+            padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            margin-bottom: 24px;
         }
 
-        .btn-edit { background: #E7EFFF; color: #2F62D6; }
-        .btn-edit:hover { background: #2F62D6; color: var(--white); }
-        .btn-delete { background: #FEE2E2; color: #DC2626; margin-left: 4px; border: none; cursor: pointer; }
-        .btn-delete:hover { background: #DC2626; color: var(--white); }
-
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+        .form-card-title {
+            font-size: 17px; font-weight: 700;
+            color: #1b4332; margin-bottom: 20px;
+            padding-bottom: 12px; border-bottom: 2px solid #f1f5f9;
         }
-        .page-title h1 { font-size: 28px; color: var(--primary); font-weight: 800; }
-        .page-title p { font-size: 14px; color: var(--text-light); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .form-group { margin-bottom: 0; }
+        .form-group.full { grid-column: span 2; }
+
+        .form-group label {
+            display: block; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .4px;
+            color: #64748b; margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%; padding: 11px 14px;
+            border: 1.5px solid #e2e8f0; border-radius: 10px;
+            font-size: 14px; font-family: 'Inter', sans-serif;
+            background: #fafafa; outline: none;
+            transition: border-color .2s; box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2d6a4f; background: #fff;
+        }
+
+        .form-group input[type="file"] {
+            padding: 8px; font-size: 13px; background: #fff;
+        }
+
+        .preview-gambar { margin-bottom: 8px; }
+        .preview-gambar img {
+            width: 70px; height: 70px; object-fit: cover;
+            border-radius: 10px; border: 2px solid #e2e8f0;
+        }
+        .preview-gambar small { display: block; font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+        .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+        .btn-submit {
+            padding: 11px 24px; border: none; border-radius: 10px;
+            background: #1b4332; color: #fff; font-weight: 700;
+            font-size: 14px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: background .2s, transform .2s;
+        }
+        .btn-submit:hover { background: #2d6a4f; transform: translateY(-2px); }
+
+        .btn-batal {
+            padding: 11px 20px; border-radius: 10px;
+            background: #f1f5f9; color: #64748b; font-weight: 600;
+            font-size: 14px; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background .2s;
+        }
+        .btn-batal:hover { background: #e2e8f0; }
+
+        /* Notif */
+        .notif-bar { padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 14px; }
+        .notif-sukses { background: #d1fae5; color: #065f46; }
+        .notif-hapus  { background: #fee2e2; color: #991b1b; }
+        .notif-gagal  { background: #fef3c7; color: #92400e; }
+
+        /* Table card */
+        .table-card {
+            background: #fff; border-radius: 16px;
+            padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06);
+        }
+
+        .table-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 4px;
+        }
+
+        .table-header h2 { font-size: 17px; font-weight: 700; color: #1b4332; }
+
+        .table-count {
+            background: #EEF5F1; color: #1b4332;
+            padding: 5px 14px; border-radius: 50px;
+            font-weight: 700; font-size: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full { grid-column: span 1; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div>
-            <a href="dashboard_admin.php" class="logo">
-                <div class="logo-icon">
-                    <i class="fa-solid fa-mountain-sun"></i>
-                </div>
-                <div class="logo-text">
-                    <h2>OMAH</h2>
-                    <span>OUTDOOR</span>
+            <a href="dashboard_admin.php" class="logo" style="display:flex;align-items:center;gap:10px;padding:24px 20px;text-decoration:none;">
+                <div style="width:40px;height:40px;background:#95d5b2;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;">🏕️</div>
+                <div>
+                    <div style="font-family:'Poppins',sans-serif;font-weight:700;color:#fff;font-size:16px;line-height:1;">OMAH</div>
+                    <div style="font-size:11px;color:#95d5b2;letter-spacing:1px;">OUTDOOR</div>
                 </div>
             </a>
-            
-            <!-- GANTI BLOK SIDEBAR MENU DI DASHBOARD_ADMIN.PHP DENGAN INI -->
-<div class="sidebar-menu">
-    <!-- Menu Beranda (Di-set ACTIVE karena kita sedang berada di halaman beranda/dashboard) -->
-    <a href="dashboard_admin.php" class="menu active"><i class="fa-solid fa-gauge-high"></i><span>Beranda</span></a>
-    
-    <!-- Link ke Katalog -->
-    <a href="katalog.php" class="menu"><i class="fa-solid fa-images"></i><span>Lihat Katalog</span></a>
-    
-    <!-- Link ke Kelola Produk -->
-    <a href="kelola_produk.php" class="menu"><i class="fa-solid fa-box-open"></i><span>Kelola Produk</span></a>
-    
-    <!-- Link ke Validasi Order -->
-    <a href="validasi_order.php" class="menu"><i class="fa-solid fa-clipboard-check"></i><span>Validasi Order</span></a>
-    
-    <!-- Link ke Laporan Keuangan -->
-    <a href="laporan.php" class="menu"><i class="fa-solid fa-file-invoice"></i><span>Laporan</span></a>
-</div>
+
+            <nav class="sidebar-nav" style="padding:0 16px;">
+                <a href="dashboard_admin.php" class="nav-item">
+                    <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span> Dashboard
+                </a>
+                <a href="kelola_produk.php" class="nav-item active">
+                    <span class="nav-icon"><i class="fa-solid fa-box-open"></i></span> Kelola Produk
+                </a>
+                <a href="validasi_order.php" class="nav-item">
+                    <span class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></span> Validasi Order
+                </a>
+                <a href="katalog.php" class="nav-item">
+                    <span class="nav-icon"><i class="fa-solid fa-images"></i></span> Lihat Katalog
+                </a>
+                <a href="index.php" class="nav-item">
+                    <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Ke Beranda
+                </a>
+            </nav>
         </div>
 
-        <div>
-            <div class="camp-card">
-                <i class="fa-solid fa-tent"></i>
-                <h4>Adventure Mode</h4>
-                <p>Sistem Siap Digunakan</p>
-            </div>
-            <a href="logout.php" class="logout-btn">
-                <i class="fa-solid fa-power-off"></i>
-                <span>Keluar</span>
+        <div class="sidebar-footer">
+            <a href="logout.php" class="btn-sidebar-logout">
+                <i class="fa-solid fa-power-off"></i> Logout
             </a>
         </div>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="admin-main">
 
+        <!-- TOP BAR -->
         <header class="admin-topbar">
             <div class="topbar-left">
                 <h1 class="page-title">Kelola Produk</h1>
                 <p class="page-subtitle">Tambah, edit, atau hapus produk katalog</p>
             </div>
-        </div>
+            <div class="topbar-right">
+                <div class="admin-badge">
+                    <span class="badge-avatar">👤</span>
+                    <div>
+                        <p class="badge-name"><?= $nama_admin ?></p>
+                        <span class="badge-role">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </header>
 
         <?php if ($notif) : ?>
         <div class="notif-bar <?= $notif_class ?>"><?= $notif ?></div>
         <?php endif; ?>
 
-        <div class="produk-layout">
+        <!-- FORM TAMBAH / EDIT -->
+        <div class="form-card">
+            <h2 class="form-card-title">
+                <?= $edit_data ? '<i class="fa-solid fa-pen"></i> Edit Produk' : '<i class="fa-solid fa-plus"></i> Tambah Produk Baru' ?>
+            </h2>
+            <form action="proses_produk.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="<?= $edit_data ? 'edit' : 'tambah' ?>">
+                <?php if ($edit_data) : ?>
+                <input type="hidden" name="id" value="<?= $edit_data['id'] ?>">
+                <?php endif; ?>
 
-            <div class="form-card">
-                <h2 class="form-card-title">
-                    <?= $edit_data ? '✏️ Edit Produk' : '➕ Tambah Produk Baru' ?>
-                </h2>
-                <form action="proses_produk.php" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="action" value="<?= $edit_data ? 'edit' : 'tambah' ?>">
-                    <?php if ($edit_data) : ?>
-                    <input type="hidden" name="id" value="<?= $edit_data['id'] ?>">
-                    <?php endif; ?>
-
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Nama Produk</label>
                         <input type="text" name="nama_produk" required
@@ -278,19 +312,19 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
                     <div class="form-group">
                         <label>Jumlah Stok (Unit)</label>
                         <input type="number" name="jumlah_stok" required min="0"
-                               value="<?= isset($edit_data['jumlah_stok']) ? $edit_data['jumlah_stok'] : '1' ?>"
-                               placeholder="Contoh: 5">
+                               value="<?= $edit_data['jumlah_stok'] ?? 1 ?>"
+                               placeholder="Contoh: 3">
                     </div>
 
                     <div class="form-group">
                         <label>Status</label>
                         <select name="status">
                             <option value="tersedia" <?= (!$edit_data || $edit_data['status'] === 'tersedia') ? 'selected' : '' ?>>Tersedia</option>
-                            <option value="disewa" <?= ($edit_data && $edit_data['status'] === 'disewa') ? 'selected' : '' ?>>Disewa</option>
+                            <option value="disewa"   <?= ($edit_data && $edit_data['status'] === 'disewa') ? 'selected' : '' ?>>Disewa</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group full">
                         <label>Foto Produk <?= $edit_data ? '(kosongkan jika tidak ganti)' : '' ?></label>
                         <?php if ($edit_data && $edit_data['gambar']) : ?>
                         <div class="preview-gambar">
@@ -298,76 +332,103 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
                                  alt="Foto saat ini" onerror="this.style.display='none'">
                             <small>Foto saat ini</small>
                         </div>
+                        <?php endif; ?>
+                        <input type="file" name="gambar" accept="image/*">
                     </div>
-                </form>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <?= $edit_data ? 'Simpan Perubahan' : 'Tambah Produk' ?>
+                    </button>
+                    <?php if ($edit_data) : ?>
+                    <a href="kelola_produk.php" class="btn-batal">
+                        <i class="fa-solid fa-xmark"></i> Batal
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+
+        <!-- TABEL PRODUK -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2><i class="fa-solid fa-list"></i> Daftar Katalog Alat Outdoor</h2>
+                <span class="table-count"><?= $total_produk ?> Item Terdaftar</span>
             </div>
 
-            <div class="table-section" style="flex:1; min-width:0;">
-                <div class="table-header">
-                    <h2 style="font-size: 18px; color: var(--primary);"><i class="fa-solid fa-list"></i> Daftar Katalog Alat Outdoor</h2>
-                    <span class="table-badge" style="background: #EEF5F1; color: var(--primary); padding: 6px 14px; border-radius: 50px; font-weight:700; font-size:12px;"><?= $total_produk; ?> Item Terdaftar</span>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Foto</th>
-                                <th>Nama Produk</th>
-                                <th>Harga/Hari</th>
-                                <th>Stok</th> <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $no = 1; while ($p = mysqli_fetch_assoc($produk_list)) : 
-                                $stok_qty = $p['jumlah_stok'] ?? 0;
-                            ?>
-                            <tr>
-                                <td style="text-align: center;"><?= $no++; ?></td>
-                                <td style="text-align: center;">
-                                    <?php if(!empty($nama_gambar)): ?>
-                                        <img src="assets/images/<?= htmlspecialchars($nama_gambar); ?>" class="img-thumb" alt="Foto">
-                                    <?php else: ?>
-                                        <div class="img-thumb" style="background: #EAECE7; display:flex; align-items:center; justify-content:center; color:#74817B;"><i class="fa-solid fa-image"></i></div>
-                                    <?php endif; ?>
-                                </td>
-                                <td><strong><?= htmlspecialchars($p['nama_produk']) ?></strong></td>
-                                <td>Rp <?= number_format($p['harga_per_hari'], 0, ',', '.') ?></td>
-                                <td style="<?= $stok_qty == 0 ? 'color: red; font-weight: bold;' : '' ?>">
-                                    <?= $stok_qty ?> Unit
-                                </td>
-                                <td>
-                                    <?php if (isset($row['status']) && strtolower($row['status']) === 'tersedia'): ?>
-                                        <span class="badge admin" style="background:#DFF7E7; color:#227247; padding:6px 12px; font-size:12px; border-radius:50px; font-weight:700; display:inline-block;"><i class="fa-solid fa-circle-check"></i> Tersedia</span>
-                                    <?php else: ?>
-                                        <span class="badge user" style="background:#FEE2E2; color:#DC2626; padding:6px 12px; font-size:12px; border-radius:50px; font-weight:700; display:inline-block;"><i class="fa-solid fa-circle-minus"></i> Disewa</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td style="text-align: center;">
-                                    <a href="edit_produk.php?id=<?= $row['id']; ?>" class="btn-action btn-edit">
-                                        <i class="fa-solid fa-pen-to-square"></i> Edit
-                                    </a>
-                                    <a href="hapus_produk.php?id=<?= $row['id']; ?>" class="btn-action btn-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
-                                        <i class="fa-solid fa-trash-can"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php 
-                                endwhile; 
-                            else:
-                            ?>
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">Belum ada data produk di katalog.</td>
-                            </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Foto</th>
+                            <th>Nama Produk</th>
+                            <th>Harga/Hari</th>
+                            <th>Stok</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php if ($total_produk > 0) : ?>
+                        <?php $no = 1; while ($p = mysqli_fetch_assoc($result)) : ?>
+                        <tr>
+                            <td style="text-align:center;"><?= $no++ ?></td>
+                            <td style="text-align:center;">
+                                <?php if (!empty($p['gambar'])) : ?>
+                                    <img src="assets/images/<?= htmlspecialchars($p['gambar']) ?>"
+                                         class="img-thumb" alt="<?= htmlspecialchars($p['nama_produk']) ?>"
+                                         onerror="this.style.display='none'">
+                                <?php else : ?>
+                                    <div class="img-placeholder"><i class="fa-solid fa-image"></i></div>
+                                <?php endif; ?>
+                            </td>
+                            <td><strong><?= htmlspecialchars($p['nama_produk']) ?></strong></td>
+                            <td>Rp <?= number_format($p['harga_per_hari'], 0, ',', '.') ?></td>
+                            <td style="text-align:center;">
+                                <span class="<?= $p['jumlah_stok'] > 0 ? 'stok-ok' : 'stok-low' ?>">
+                                    <?= $p['jumlah_stok'] ?> Unit
+                                </span>
+                            </td>
+                            <td style="text-align:center;">
+                                <?php if ($p['status'] === 'tersedia') : ?>
+                                    <span class="badge-status badge-tersedia">
+                                        <i class="fa-solid fa-circle-check"></i> Tersedia
+                                    </span>
+                                <?php else : ?>
+                                    <span class="badge-status badge-disewa">
+                                        <i class="fa-solid fa-circle-minus"></i> Disewa
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td style="text-align:center;">
+                                <a href="kelola_produk.php?edit=<?= $p['id'] ?>" class="btn-action btn-edit">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <a href="proses_produk.php?action=hapus&id=<?= $p['id'] ?>"
+                                   class="btn-action btn-delete"
+                                   onclick="return confirm('Yakin hapus produk ini?')">
+                                    <i class="fa-solid fa-trash-can"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7" style="text-align:center;padding:50px;color:#94a3b8;">
+                                <i class="fa-solid fa-box-open" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                                Belum ada produk di katalog.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-        </div></main>
+    </main>
 
 </body>
 </html>

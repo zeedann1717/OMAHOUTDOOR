@@ -43,6 +43,7 @@ CREATE TABLE `produk` (
   `id`             int(11)              NOT NULL AUTO_INCREMENT,
   `nama_produk`    varchar(150)         NOT NULL,
   `harga_per_hari` int(11)              NOT NULL,
+  `jumlah_stok`    int(11)              NOT NULL DEFAULT 1,
   `status`         enum('tersedia','disewa') NOT NULL DEFAULT 'tersedia',
   `gambar`         varchar(255)         DEFAULT NULL,
   `created_at`     timestamp            NOT NULL DEFAULT current_timestamp(),

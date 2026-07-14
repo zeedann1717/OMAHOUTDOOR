@@ -40,6 +40,7 @@ $status_label = [
                 <li><a href="index.php">Beranda</a></li>
                 <li><a href="katalog.php">Katalog</a></li>
                 <li><a href="riwayat_order.php" class="active">Riwayat Order</a></li>
+                                <li><a href="profil.php">👤 Profil</a></li>
                 <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
                     <li><a href="dashboard_admin.php" class="btn-login">🛠️ Dashboard Admin</a></li>
                 <?php endif; ?>

@@ -8,7 +8,7 @@ require_once 'koneksi.php';
 
 // Keamanan: Hanya admin yang boleh masuk
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: katalog.php'); 
+    header('Location: katalog.php');
     exit;
 }
 
@@ -24,6 +24,23 @@ $row_produk = mysqli_fetch_assoc($res_produk);
 $query_admin = "SELECT COUNT(*) AS total_admin FROM users WHERE role = 'admin'";
 $res_admin = mysqli_query($conn, $query_admin);
 $row_admin = mysqli_fetch_assoc($res_admin);
+
+// Variabel ringkasan
+$total_admin      = (int) $row_admin['total_admin'];
+$total_user_biasa = (int) $row_user['total_user'];
+$total_users      = $total_admin + $total_user_biasa;
+$total_produk     = (int) $row_produk['total_produk'];
+
+// Hitung order berdasarkan status
+$query_order_stats = "SELECT status, COUNT(*) as total FROM orders GROUP BY status";
+$res_order_stats   = mysqli_query($conn, $query_order_stats);
+$order_stats = ['pending'=>0,'dikonfirmasi'=>0,'selesai'=>0,'dibatalkan'=>0];
+if ($res_order_stats) {
+    while ($row_os = mysqli_fetch_assoc($res_order_stats)) {
+        $order_stats[$row_os['status']] = $row_os['total'];
+    }
+}
+$total_order = array_sum($order_stats);
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +51,7 @@ $row_admin = mysqli_fetch_assoc($res_admin);
     <title>Dashboard Admin - Omah Outdoor</title>
     <link rel="stylesheet" href="assets/css/admin.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    
+
     <style>
         html, body {
             max-width: 100% !important;
@@ -62,9 +79,9 @@ $row_admin = mysqli_fetch_assoc($res_admin);
             justify-content: space-between;
             align-items: center;
             overflow: hidden;
-            
+
             /* Sisi kiri diberi gradasi gelap transparan agar teks kontras, sisi kanan memperlihatkan keindahan gunung secara penuh */
-            background-image: linear-gradient(135deg, rgba(32, 61, 47, 0.92) 0%, rgba(41, 89, 67, 0.65) 55%, rgba(255, 255, 255, 0) 100%), 
+            background-image: linear-gradient(135deg, rgba(32, 61, 47, 0.92) 0%, rgba(41, 89, 67, 0.65) 55%, rgba(255, 255, 255, 0) 100%),
                               url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
@@ -195,12 +212,17 @@ $row_admin = mysqli_fetch_assoc($res_admin);
                 <div class="logo-icon"><i class="fa-solid fa-mountain-sun"></i></div>
                 <div class="logo-text"><h2>OMAH</h2><span>OUTDOOR</span></div>
             </a>
-            
+
             <div class="sidebar-menu">
                 <a href="dashboard_admin.php" class="menu active"><i class="fa-solid fa-gauge-high"></i><span>Beranda</span></a>
                 <a href="katalog.php" class="menu"><i class="fa-solid fa-images"></i><span>Lihat Katalog</span></a>
                 <a href="kelola_produk.php" class="menu"><i class="fa-solid fa-box-open"></i><span>Kelola Produk</span></a>
-                <a href="validasi_order.php" class="menu"><i class="fa-solid fa-clipboard-check"></i><span>Validasi Order</span></a>
+                <a href="validasi_order.php" class="nav-item">
+                    <span class="nav-icon">🔍</span> Validasi Order
+                    <?php if ($order_stats['pending'] > 0) : ?>
+                        <span style="background:#ef4444;color:#fff;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:700;margin-left:auto;"><?= $order_stats['pending'] ?></span>
+                    <?php endif; ?>
+                </a>
                 <a href="laporan.php" class="menu"><i class="fa-solid fa-file-invoice"></i><span>Laporan</span></a>
                 <a href="pengaturan.php" class="menu"><i class="fa-solid fa-gear"></i><span>Pengaturan</span></a>
             </div>
@@ -218,7 +240,7 @@ $row_admin = mysqli_fetch_assoc($res_admin);
 
     <!-- KONTEN UTAMA -->
     <main class="main-content">
-        
+
         <!-- BANNER DENGAN BACKGROUND GUNUNG FULL DAN TRANSPARAN OVERLAY -->
         <div class="welcome-banner">
             <div class="banner-left">
@@ -239,30 +261,69 @@ $row_admin = mysqli_fetch_assoc($res_admin);
             </div>
         </div>
 
-        <!-- ROW KARTU STATISTIK KECIL BAWAH -->
-        <div class="stats-row">
-            <div class="card-stat">
-                <div class="stat-icon-box"><i class="fa-solid fa-user-gear"></i></div>
-                <div>
-                    <p style="margin: 0; font-size: 13px; color: #6B7280;">Total Pengguna</p>
-                    <h3 style="margin: 5px 0 0 0; font-size: 22px; color: #2D4A3E; font-weight: 800;"><?= $row_user['total_user'] ?></h3>
+        <!-- STATS CARDS BARIS 1: User & Produk -->
+        <section class="stats-grid" style="margin-bottom:16px;">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1fae5;color:#065f46;">👥</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total User</p>
+                    <h2 class="stat-value"><?= $total_users ?></h2>
                 </div>
             </div>
-            <div class="card-stat">
-                <div class="stat-icon-box"><i class="fa-solid fa-campground"></i></div>
-                <div>
-                    <p style="margin: 0; font-size: 13px; color: #6B7280;">Total Produk</p>
-                    <h3 style="margin: 5px 0 0 0; font-size: 22px; color: #2D4A3E; font-weight: 800;"><?= $row_produk['total_produk'] ?></h3>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fef3c7;color:#92400e;">👑</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Admin</p>
+                    <h2 class="stat-value"><?= $total_admin ?></h2>
                 </div>
             </div>
-            <div class="card-stat">
-                <div class="stat-icon-box"><i class="fa-solid fa-user-shield"></i></div>
-                <div>
-                    <p style="margin: 0; font-size: 13px; color: #6B7280;">Total Admin</p>
-                    <h3 style="margin: 5px 0 0 0; font-size: 22px; color: #2D4A3E; font-weight: 800;"><?= $row_admin['total_admin'] ?></h3>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">🙋</div>
+                <div class="stat-info">
+                    <p class="stat-label">User Biasa</p>
+                    <h2 class="stat-value"><?= $total_user_biasa ?></h2>
                 </div>
             </div>
-        </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#ffe4e6;color:#9f1239;">📦</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Produk</p>
+                    <h2 class="stat-value"><?= $total_produk ?></h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS CARDS BARIS 2: Order -->
+        <section class="stats-grid" style="margin-bottom:32px;">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f1f5f9;color:#475569;">🛒</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Order</p>
+                    <h2 class="stat-value"><?= $total_order ?></h2>
+                </div>
+            </div>
+            <div class="stat-card" style="border-left:4px solid #f59e0b;">
+                <div class="stat-icon" style="background:#fef3c7;color:#92400e;">⏳</div>
+                <div class="stat-info">
+                    <p class="stat-label">Perlu Diproses</p>
+                    <h2 class="stat-value" style="color:#d97706;"><?= $order_stats['pending'] ?></h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#d1fae5;color:#065f46;">✅</div>
+                <div class="stat-info">
+                    <p class="stat-label">Dikonfirmasi</p>
+                    <h2 class="stat-value"><?= $order_stats['dikonfirmasi'] ?></h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">🎉</div>
+                <div class="stat-info">
+                    <p class="stat-label">Selesai</p>
+                    <h2 class="stat-value"><?= $order_stats['selesai'] ?></h2>
+                </div>
+            </div>
+        </section>
 
         <!-- AREA TABEL MANAJEMEN PENGGUNA -->
         <div class="table-card" style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 12px 30px rgba(41, 89, 67, 0.05); margin-top: 30px;">
@@ -270,7 +331,7 @@ $row_admin = mysqli_fetch_assoc($res_admin);
                 <h2 style="font-size: 20px; color: #295943; font-weight: 700; margin: 0;">Manajemen Pengguna</h2>
                 <span class="table-badge" style="padding: 6px 16px; border-radius: 50px; background: #EEF5F1; color: #295943; font-weight: 700; font-size: 12px;">Terbaru</span>
             </div>
-            
+
             <div class="table-responsive" style="overflow-x: auto; border-radius: 12px; border: 1px solid #EDF0EC;">
                 <table class="admin-table" style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
                     <thead>

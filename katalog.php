@@ -35,13 +35,14 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
 <nav class="navbar">
     <div class="container nav-wrapper">
         <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
-        
+
         <ul class="nav-links" style="display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0;">
             <li><a href="index.php">Beranda</a></li>
             <li><a href="keunggulan.php">Keunggulan</a></li>
             <li><a href="katalog.php" style="font-weight: bold; border-bottom: 2px solid #fff;">Katalog</a></li>
             <li><a href="riwayat_order.php">Riwayat Order</a></li>
-            
+                        <li><a href="profil.php">👤 Profil</a></li>
+
             <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
                 <li><a href="kasir.php" style="color: #ffcc80;">Kasir</a></li>
                 <li><a href="kelola_produk.php" style="color: #ffcc80;">Kelola Produk</a></li>
@@ -59,7 +60,7 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
 <section class="catalog" style="padding-top: 120px;">
     <div class="container">
         <div class="product-grid">
-            
+
             <?php if ($db_error) : ?>
                 <div style="text-align:center; color:red; grid-column:1/-1;">
                     <h3>⚠️ Error Database</h3>
@@ -69,8 +70,8 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
             <?php elseif (mysqli_num_rows($result_produk) === 0) : ?>
                 <p style="text-align:center; grid-column:1/-1;">Belum ada produk tersedia.</p>
             <?php else : ?>
-                
-                <?php while ($produk = mysqli_fetch_assoc($result_produk)) : 
+
+                <?php while ($produk = mysqli_fetch_assoc($result_produk)) :
                     // Logika profesional untuk cek stok dan status
                     $stok = $produk['jumlah_stok'] ?? 0;
                     $is_tersedia = ($stok > 0 && strtolower($produk['status']) === 'tersedia');
@@ -80,12 +81,12 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
                     <div class="product-info">
                         <h3><?= htmlspecialchars($produk['nama_produk']) ?></h3>
                         <p>Rp <?= number_format($produk['harga_per_hari'], 0, ',', '.') ?> / hari</p>
-                        
+
                         <p class="stok-info <?= $is_tersedia ? 'stok-ada' : 'stok-habis' ?>">
                             <?= $is_tersedia ? 'Tersedia (' . $stok . ' Unit)' : 'Stok Habis / Disewa' ?>
                         </p>
 
-                        <a href="<?= $is_tersedia ? 'pesan.php?produk_id='.$produk['id'] : '#' ?>" 
+                        <a href="<?= $is_tersedia ? 'pesan.php?produk_id='.$produk['id'] : '#' ?>"
                            class="btn-check <?= !$is_tersedia ? 'disabled' : '' ?>">
                             <?= $is_tersedia ? 'Sewa Sekarang' : 'Tidak Tersedia' ?>
                         </a>
@@ -99,7 +100,7 @@ $db_error = !$result_produk ? mysqli_error($conn) : null;
                     </div>
                 </div>
                 <?php endwhile; ?>
-                
+
             <?php endif; ?>
         </div>
     </div>

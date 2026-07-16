@@ -96,6 +96,13 @@ window.addEventListener('click', function (event) {
     }
 });
 
+// Menutup modal jika tombol Escape ditekan
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
 // Fungsi pindah tab Login/Daftar
 function switchForm(type) {
     const loginForm = document.getElementById('form-login');

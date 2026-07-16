@@ -1,4 +1,5 @@
 # 🏕️ OMAH OUTDOOR — Panduan Setup Lengkap
+![Status](https://img.shields.io/badge/Status-Siap_Presentasi-success)
 > Buat seluruh anggota Kelompok 6 — baca sampai habis biar gak error!
 
 ---

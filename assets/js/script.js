@@ -103,7 +103,10 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Fungsi pindah tab Login/Daftar
+/**
+ * Mengatur pergantian antarmuka antara formulir Login dan Registrasi.
+ * @param {string} type - Menentukan target form ('login' atau 'register').
+ */
 function switchForm(type) {
     const loginForm = document.getElementById('form-login');
     const regForm = document.getElementById('form-register');

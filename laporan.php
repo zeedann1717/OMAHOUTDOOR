@@ -115,10 +115,11 @@ $total_batal = $row_batal['total_batal'] ?? 0;
     <!-- SIDEBAR KIRI (DENGAN FORMAT 6 MENU LAMA-BARU SINKRON) -->
     <aside class="sidebar">
         <div>
-            <a href="dashboard_admin.php" class="logo">
-                <div class="logo-icon"><i class="fa-solid fa-mountain-sun"></i></div>
-                <div class="logo-text"><h2>OMAH</h2><span>OUTDOOR</span></div>
-            </a>
+            <!-- UBAH HREF-NYA MENJADI index.php -->
+<a href="index.php" class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+    <div class="logo-text"><h2>OMAH</h2><span>OUTDOOR</span></div>
+</a>
             
             <div class="sidebar-menu">
                 <a href="dashboard_admin.php" class="menu"><i class="fa-solid fa-gauge-high"></i><span>Beranda</span></a>

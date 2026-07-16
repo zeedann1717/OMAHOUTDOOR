@@ -34,12 +34,19 @@ $initial = strtoupper(substr($user['nama'] ?? 'U', 0, 1));
         <a href="index.php" class="logo">🏕️ OMAH <span>OUTDOOR</span></a>
         <ul class="nav-links">
             <li><a href="index.php">Beranda</a></li>
-            <li><a href="katalog.php">Katalog</a></li>
-            <li><a href="riwayat_order.php">Riwayat Order</a></li>
-            <li><a href="profil.php" class="active">👤 Profil</a></li>
-            <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
-                <li><a href="dashboard_admin.php" class="btn-login">🛠️ Dashboard Admin</a></li>
+            
+            <!-- LOGIKA HAK AKSES NAVBAR -->
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') : ?>
+                <!-- Menu Khusus Admin: Katalog & Riwayat disembunyikan -->
+                <li><a href="profil.php" class="active">👤 Profil</a></li>
+                <li><a href="dashboard_admin.php" class="btn-login" style="background-color: #e7c56a; color: #1b4332; font-weight: bold; border-radius: 8px; padding: 6px 12px;">🛠️ Dashboard Admin</a></li>
+            <?php else : ?>
+                <!-- Menu Khusus User Biasa -->
+                <li><a href="katalog.php">Katalog</a></li>
+                <li><a href="riwayat_order.php">Riwayat Order</a></li>
+                <li><a href="profil.php" class="active">👤 Profil</a></li>
             <?php endif; ?>
+            
             <li><a href="logout.php" class="btn-logout">Logout</a></li>
         </ul>
         <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu">
@@ -66,7 +73,8 @@ $initial = strtoupper(substr($user['nama'] ?? 'U', 0, 1));
         </div>
     </div>
 
-    <div class="profil-grid">
+    <!-- RESPONSIVE GRID LAYOUT -->
+    <div class="profil-grid" style="grid-template-columns: <?= $user['role'] === 'admin' ? '1fr 1fr' : '1fr 1fr' ?>;">
 
         <!-- FORM EDIT PROFIL -->
         <div class="profil-card">
@@ -111,35 +119,37 @@ $initial = strtoupper(substr($user['nama'] ?? 'U', 0, 1));
             </form>
         </div>
 
-        <!-- INFO AKUN -->
-        <div class="profil-card">
-            <h2 class="profil-card-title">📊 Info Akun</h2>
-            <?php
-            $res_order = mysqli_query($conn, "SELECT status, COUNT(*) as total FROM orders WHERE user_id=$user_id GROUP BY status");
-            $o = ['pending'=>0,'dikonfirmasi'=>0,'selesai'=>0,'dibatalkan'=>0];
-            while($r = mysqli_fetch_assoc($res_order)) $o[$r['status']] = $r['total'];
-            $total_order_user = array_sum($o);
-            ?>
-            <div class="profil-info-list">
-                <div class="profil-info-item">
-                    <span class="profil-info-label">📅 Bergabung</span>
-                    <span class="profil-info-val"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
+        <!-- KONDISIONAL: KARTU INFO AKUN HANYA UNTUK USER BIASA -->
+        <?php if ($user['role'] !== 'admin') : ?>
+            <div class="profil-card" style="grid-column: span 2;">
+                <h2 class="profil-card-title">📊 Info Akun</h2>
+                <?php
+                $res_order = mysqli_query($conn, "SELECT status, COUNT(*) as total FROM orders WHERE user_id=$user_id GROUP BY status");
+                $o = ['pending'=>0,'dikonfirmasi'=>0,'selesai'=>0,'dibatalkan'=>0];
+                while($r = mysqli_fetch_assoc($res_order)) $o[$r['status']] = $r['total'];
+                $total_order_user = array_sum($o);
+                ?>
+                <div class="profil-info-list" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">📅 Bergabung</span>
+                        <span class="profil-info-val"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">🛒 Total Order</span>
+                        <span class="profil-info-val"><?= $total_order_user ?></span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">⏳ Menunggu</span>
+                        <span class="profil-info-val"><?= $o['pending'] ?></span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">🎉 Selesai</span>
+                        <span class="profil-info-val"><?= $o['selesai'] ?></span>
+                    </div>
                 </div>
-                <div class="profil-info-item">
-                    <span class="profil-info-label">🛒 Total Order</span>
-                    <span class="profil-info-val"><?= $total_order_user ?></span>
-                </div>
-                <div class="profil-info-item">
-                    <span class="profil-info-label">⏳ Menunggu</span>
-                    <span class="profil-info-val"><?= $o['pending'] ?></span>
-                </div>
-                <div class="profil-info-item">
-                    <span class="profil-info-label">🎉 Selesai</span>
-                    <span class="profil-info-val"><?= $o['selesai'] ?></span>
-                </div>
+                <a href="riwayat_order.php" class="profil-btn-riwayat" style="margin-top: 15px;">📜 Lihat Riwayat Order</a>
             </div>
-            <a href="riwayat_order.php" class="profil-btn-riwayat">📜 Lihat Riwayat Order</a>
-        </div>
+        <?php endif; ?>
 
     </div>
 </div>
@@ -247,8 +257,9 @@ $initial = strtoupper(substr($user['nama'] ?? 'U', 0, 1));
 .profil-btn-riwayat:hover { background: #d1fae5; }
 
 @media (max-width: 768px) {
-    .profil-grid { grid-template-columns: 1fr; }
+    .profil-grid { grid-template-columns: 1fr !important; }
     .profil-hero { flex-direction: column; text-align: center; }
+    .profil-info-list { grid-template-columns: 1fr !important; }
 }
 </style>
 

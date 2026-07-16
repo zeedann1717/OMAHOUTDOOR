@@ -213,7 +213,6 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
 </head>
 <body>
 
-    <!-- SIDEBAR — struktur sesuai admin.css -->
     <aside class="sidebar">
         <div>
             <a href="dashboard_admin.php" class="logo">
@@ -258,10 +257,8 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
 
-        <!-- PAGE HEADER -->
         <div class="page-header">
             <h1><i class="fa-solid fa-box-open"></i> Kelola Produk</h1>
             <p>Tambah, edit, atau hapus produk katalog sewa alat outdoor</p>
@@ -271,7 +268,6 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
         <div class="notif-bar <?= $notif_class ?>"><?= $notif ?></div>
         <?php endif; ?>
 
-        <!-- FORM TAMBAH / EDIT -->
         <div class="form-card">
             <div class="form-card-title">
                 <?php if ($edit_data) : ?>
@@ -344,7 +340,6 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
             </form>
         </div>
 
-        <!-- TABEL PRODUK -->
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fa-solid fa-list"></i> Daftar Katalog Alat Outdoor</h2>
@@ -384,8 +379,11 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
                             <td><strong><?= htmlspecialchars($p['nama_produk']) ?></strong></td>
                             <td>Rp <?= number_format($p['harga_per_hari'], 0, ',', '.') ?></td>
                             <td style="text-align:center;">
-                                <span class="<?= $p['jumlah_stok'] > 0 ? 'stok-ok' : 'stok-low' ?>">
-                                    <?= $p['jumlah_stok'] ?> Unit
+                                <?php 
+                                $stok_sekarang = isset($p['jumlah_stok']) ? (int)$p['jumlah_stok'] : 0;
+                                ?>
+                                <span class="<?= $stok_sekarang > 0 ? 'stok-ok' : 'stok-low' ?>">
+                                    <?= $stok_sekarang ?> Unit
                                 </span>
                             </td>
                             <td style="text-align:center;">
@@ -424,7 +422,5 @@ $nama_admin = htmlspecialchars($_SESSION['nama'] ?? 'Administrator');
             </div>
         </div>
 
-    </div><!-- end .main-content -->
-
-</body>
+    </div></body>
 </html>

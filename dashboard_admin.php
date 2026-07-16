@@ -1,6 +1,6 @@
 <?php
 /* ============================================================
-   OMAH OUTDOOR - DASHBOARD ADMIN (FULL PREMIUM COVER BANNER)
+   OMAH OUTDOOR - DASHBOARD ADMIN (CLEAN FULL PRESERVED KODE)
    ============================================================ */
 
 session_start();
@@ -25,12 +25,6 @@ $query_admin = "SELECT COUNT(*) AS total_admin FROM users WHERE role = 'admin'";
 $res_admin = mysqli_query($conn, $query_admin);
 $row_admin = mysqli_fetch_assoc($res_admin);
 
-// Variabel ringkasan
-$total_admin      = (int) $row_admin['total_admin'];
-$total_user_biasa = (int) $row_user['total_user'];
-$total_users      = $total_admin + $total_user_biasa;
-$total_produk     = (int) $row_produk['total_produk'];
-
 // Hitung order berdasarkan status
 $query_order_stats = "SELECT status, COUNT(*) as total FROM orders GROUP BY status";
 $res_order_stats   = mysqli_query($conn, $query_order_stats);
@@ -41,6 +35,10 @@ if ($res_order_stats) {
     }
 }
 $total_order = array_sum($order_stats);
+
+// Mengambil list pengguna asli dari database untuk tabel manajemen pengguna
+$query_list_users = "SELECT id, nama, email, no_wa, role, created_at FROM users ORDER BY id DESC";
+$res_list_users = mysqli_query($conn, $query_list_users);
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +49,7 @@ $total_order = array_sum($order_stats);
     <title>Dashboard Admin - Omah Outdoor</title>
     <link rel="stylesheet" href="assets/css/admin.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    
     <style>
         html, body {
             max-width: 100% !important;
@@ -60,14 +58,14 @@ $total_order = array_sum($order_stats);
         }
 
         .main-content {
-            margin-left: 285px !important;
-            width: calc(100% - 285px) !important;
-            max-width: calc(100% - 285px) !important;
+            margin-left: 280px !important;
+            width: calc(100% - 280px) !important;
+            max-width: calc(100% - 280px) !important;
             padding: 40px !important;
             box-sizing: border-box !important;
         }
 
-        /* 🏔️ FIX: BANNER MODERN DENGAN BACKGROUND GUNUNG FULL SCREEN */
+        /* 🏔️ BANNER MODERN DENGAN BACKGROUND GUNUNG FULL SCREEN */
         .welcome-banner {
             position: relative;
             width: 100%;
@@ -79,9 +77,8 @@ $total_order = array_sum($order_stats);
             justify-content: space-between;
             align-items: center;
             overflow: hidden;
-
-            /* Sisi kiri diberi gradasi gelap transparan agar teks kontras, sisi kanan memperlihatkan keindahan gunung secara penuh */
-            background-image: linear-gradient(135deg, rgba(32, 61, 47, 0.92) 0%, rgba(41, 89, 67, 0.65) 55%, rgba(255, 255, 255, 0) 100%),
+            
+            background-image: linear-gradient(135deg, rgba(32, 61, 47, 0.92) 0%, rgba(41, 89, 67, 0.65) 55%, rgba(255, 255, 255, 0) 100%), 
                               url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
@@ -115,9 +112,7 @@ $total_order = array_sum($order_stats);
             line-height: 1.2;
         }
 
-        .highlight {
-            color: #E7C56A; /* Warna Emas Mewah */
-        }
+        .highlight { color: #E7C56A; }
 
         .banner-desc {
             font-size: 14px;
@@ -143,10 +138,7 @@ $total_order = array_sum($order_stats);
             gap: 8px;
         }
 
-        .btn-add {
-            background-color: #E7C56A;
-            color: #2D4A3E;
-        }
+        .btn-add { background-color: #E7C56A; color: #2D4A3E; }
         .btn-add:hover { background-color: #dcb85c; transform: translateY(-2px); }
 
         .btn-view {
@@ -172,34 +164,33 @@ $total_order = array_sum($order_stats);
         }
 
         /* Layout Grid Statistik Bawah */
-        .stats-row {
+        .stats-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-top: 30px;
         }
 
         .card-stat {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.02);
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
             border: 1px solid rgba(230, 235, 232, 0.5);
         }
 
         .stat-icon-box {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
-            background: #EDF0EC;
-            color: #2D4A3E;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -208,39 +199,35 @@ $total_order = array_sum($order_stats);
     <!-- SIDEBAR KIRI -->
     <aside class="sidebar">
         <div>
-            <a href="dashboard_admin.php" class="logo">
-                <div class="logo-icon"><i class="fa-solid fa-mountain-sun"></i></div>
-                <div class="logo-text"><h2>OMAH</h2><span>OUTDOOR</span></div>
-            </a>
-
+           <!-- UBAH HREF-NYA MENJADI index.php -->
+                <a href="index.php" class="logo">
+                  <div class="logo-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+                  <div class="logo-text"><h2>OMAH</h2><span>OUTDOOR</span></div>
+                </a>
+            
             <div class="sidebar-menu">
                 <a href="dashboard_admin.php" class="menu active"><i class="fa-solid fa-gauge-high"></i><span>Beranda</span></a>
-                <a href="katalog.php" class="menu"><i class="fa-solid fa-images"></i><span>Lihat Katalog</span></a>
+                <a href="profil.php" class="menu"><i class="fa-solid fa-user"></i><span>Profil</span></a>
                 <a href="kelola_produk.php" class="menu"><i class="fa-solid fa-box-open"></i><span>Kelola Produk</span></a>
-                <a href="validasi_order.php" class="nav-item">
-                    <span class="nav-icon">🔍</span> Validasi Order
+                <a href="validasi_order.php" class="menu">
+                    <i class="fa-solid fa-clipboard-check"></i><span>Validasi Order</span>
                     <?php if ($order_stats['pending'] > 0) : ?>
                         <span style="background:#ef4444;color:#fff;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:700;margin-left:auto;"><?= $order_stats['pending'] ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="laporan.php" class="menu"><i class="fa-solid fa-file-invoice"></i><span>Laporan</span></a>
-                <a href="pengaturan.php" class="menu"><i class="fa-solid fa-gear"></i><span>Pengaturan</span></a>
             </div>
         </div>
 
         <div>
-            <div class="camp-card">
-                <i class="fa-solid fa-tent"></i>
-                <h4>Adventure Mode</h4>
-                <p>Sistem Siap Digunakan</p>
-            </div>
+            <!-- 🗑️ DELETED: KARTU ADVENTURE MODE STATIS NYANGKUT SUDAH DIHAPUS BIAR RAPI -->
             <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i><span>Keluar</span></a>
         </div>
     </aside>
 
     <!-- KONTEN UTAMA -->
     <main class="main-content">
-
+        
         <!-- BANNER DENGAN BACKGROUND GUNUNG FULL DAN TRANSPARAN OVERLAY -->
         <div class="welcome-banner">
             <div class="banner-left">
@@ -261,77 +248,84 @@ $total_order = array_sum($order_stats);
             </div>
         </div>
 
-        <!-- STATS CARDS BARIS 1: User & Produk -->
-        <section class="stats-grid" style="margin-bottom:16px;">
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#d1fae5;color:#065f46;">👥</div>
-                <div class="stat-info">
-                    <p class="stat-label">Total User</p>
-                    <h2 class="stat-value"><?= $total_users ?></h2>
+        <!-- 📊 FIX LAYOUT: GRIDS STATISTIK DISATUKAN MENJADI 4 KOLOM PARALEL -->
+        <div class="stats-container">
+            
+            <!-- Baris Kategori Pengguna & Logistik -->
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#e0f2fe; color:#0369a1;"><i class="fa-solid fa-users"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Total User</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $row_user['total_user'] + $row_admin['total_admin'] ?></h3>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#fef3c7;color:#92400e;">👑</div>
-                <div class="stat-info">
-                    <p class="stat-label">Total Admin</p>
-                    <h2 class="stat-value"><?= $total_admin ?></h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">🙋</div>
-                <div class="stat-info">
-                    <p class="stat-label">User Biasa</p>
-                    <h2 class="stat-value"><?= $total_user_biasa ?></h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#ffe4e6;color:#9f1239;">📦</div>
-                <div class="stat-info">
-                    <p class="stat-label">Total Produk</p>
-                    <h2 class="stat-value"><?= $total_produk ?></h2>
-                </div>
-            </div>
-        </section>
 
-        <!-- STATS CARDS BARIS 2: Order -->
-        <section class="stats-grid" style="margin-bottom:32px;">
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#f1f5f9;color:#475569;">🛒</div>
-                <div class="stat-info">
-                    <p class="stat-label">Total Order</p>
-                    <h2 class="stat-value"><?= $total_order ?></h2>
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#fef3c7; color:#b45309;"><i class="fa-solid fa-user-shield"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Total Admin</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $row_admin['total_admin'] ?></h3>
                 </div>
             </div>
-            <div class="stat-card" style="border-left:4px solid #f59e0b;">
-                <div class="stat-icon" style="background:#fef3c7;color:#92400e;">⏳</div>
-                <div class="stat-info">
-                    <p class="stat-label">Perlu Diproses</p>
-                    <h2 class="stat-value" style="color:#d97706;"><?= $order_stats['pending'] ?></h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#d1fae5;color:#065f46;">✅</div>
-                <div class="stat-info">
-                    <p class="stat-label">Dikonfirmasi</p>
-                    <h2 class="stat-value"><?= $order_stats['dikonfirmasi'] ?></h2>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background:#dbeafe;color:#1e40af;">🎉</div>
-                <div class="stat-info">
-                    <p class="stat-label">Selesai</p>
-                    <h2 class="stat-value"><?= $order_stats['selesai'] ?></h2>
-                </div>
-            </div>
-        </section>
 
-        <!-- AREA TABEL MANAJEMEN PENGGUNA -->
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#e0e7ff; color:#4338ca;"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">User Biasa</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $row_user['total_user'] ?></h3>
+                </div>
+            </div>
+
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#fce7f3; color:#be185d;"><i class="fa-solid fa-campground"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Total Produk</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $row_produk['total_produk'] ?></h3>
+                </div>
+            </div>
+
+            <!-- Baris Data Invoice / Order Transaksi -->
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#f1f5f9; color:#475569;"><i class="fa-solid fa-basket-shopping"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Total Order</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $total_order ?></h3>
+                </div>
+            </div>
+
+            <div class="card-stat" style="border-left: 4px solid #f59e0b;">
+                <div class="stat-icon-box" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-hourglass-half"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #d97706; text-transform:uppercase; font-weight:700; letter-spacing:0.3px;">Perlu Diproses</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #d97706; font-weight: 800;"><?= $order_stats['pending'] ?></h3>
+                </div>
+            </div>
+
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#d1fae5; color:#047857;"><i class="fa-solid fa-circle-check"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Dikonfirmasi</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $order_stats['dikonfirmasi'] ?></h3>
+                </div>
+            </div>
+
+            <div class="card-stat">
+                <div class="stat-icon-box" style="background:#e0f2fe; color:#0369a1;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div>
+                    <p style="margin: 0; font-size: 11px; color: #6B7280; text-transform:uppercase; font-weight:600; letter-spacing:0.3px;">Selesai</p>
+                    <h3 style="margin: 3px 0 0 0; font-size: 20px; color: #2D4A3E; font-weight: 800;"><?= $order_stats['selesai'] ?></h3>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- AREA TABEL MANAJEMEN PENGGUNA (REAL DATA) -->
         <div class="table-card" style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 12px 30px rgba(41, 89, 67, 0.05); margin-top: 30px;">
             <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="font-size: 20px; color: #295943; font-weight: 700; margin: 0;">Manajemen Pengguna</h2>
-                <span class="table-badge" style="padding: 6px 16px; border-radius: 50px; background: #EEF5F1; color: #295943; font-weight: 700; font-size: 12px;">Terbaru</span>
+                <span class="table-badge" style="padding: 6px 16px; border-radius: 50px; background: #EEF5F1; color: #295943; font-weight: 700; font-size: 12px;">Data Terkini</span>
             </div>
-
+            
             <div class="table-responsive" style="overflow-x: auto; border-radius: 12px; border: 1px solid #EDF0EC;">
                 <table class="admin-table" style="width: 100%; border-collapse: collapse; min-width: 800px; text-align: left;">
                     <thead>
@@ -345,32 +339,40 @@ $total_order = array_sum($order_stats);
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;">1</td>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;">
-                                <div class="user-info" style="display: flex; align-items: center; gap: 10px;">
-                                    <div class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #295943, #3D7A59); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;">A</div>
-                                    <strong>Arif Maulana</strong>
-                                </div>
-                            </td>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;">Arif123@gmail.com</td>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;">08888888888</td>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;"><span class="badge user" style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; background: #E7EFFF; color: #2F62D6;">User</span></td>
-                            <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;">05 Jul 2026</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px;">2</td>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px;">
-                                <div class="user-info" style="display: flex; align-items: center; gap: 10px;">
-                                    <div class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #295943, #3D7A59); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;">Z</div>
-                                    <strong>Zidan Maulana</strong>
-                                </div>
-                            </td>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px; color: #74817B;">maulanazidan4420@gmail.com</td>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px; color: #74817B;">081234567890</td>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px;"><span class="badge admin" style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; background: #DFF7E7; color: #227247;">Admin</span></td>
-                            <td style="padding: 14px 16px; border-bottom: none; font-size: 13px; color: #74817B;">01 May 2026</td>
-                        </tr>
+                        <?php 
+                        $no = 1;
+                        if (mysqli_num_rows($res_list_users) > 0) :
+                            while ($u = mysqli_fetch_assoc($res_list_users)) : 
+                                $first_letter = strtoupper(substr($u['nama'] ?? 'U', 0, 1));
+                                $role_badge_class = ($u['role'] === 'admin') ? 'background: #DFF7E7; color: #227247;' : 'background: #E7EFFF; color: #2F62D6;';
+                        ?>
+                            <tr>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;"><?= $no++; ?></td>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;">
+                                    <div class="user-info" style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #295943, #3D7A59); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;"><?= $first_letter; ?></div>
+                                        <strong><?= htmlspecialchars($u['nama'] ?? '-'); ?></strong>
+                                    </div>
+                                </td>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;"><?= htmlspecialchars($u['email']); ?></td>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;"><?= htmlspecialchars($u['no_wa'] ?? '-'); ?></td>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px;">
+                                    <span class="badge" style="display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; <?= $role_badge_class; ?>">
+                                        <?= ucfirst($u['role']); ?>
+                                    </span>
+                                </td>
+                                <td style="padding: 14px 16px; border-bottom: 1px solid #EDF0EC; font-size: 13px; color: #74817B;">
+                                    <?= isset($u['created_at']) ? date('d M Y', strtotime($u['created_at'])) : '-'; ?>
+                                </td>
+                            </tr>
+                        <?php 
+                            endwhile; 
+                        else: 
+                        ?>
+                            <tr>
+                                <td colspan="6" style="padding: 20px; text-align: center; color: #74817B;">Belum ada data pengguna terdaftar.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

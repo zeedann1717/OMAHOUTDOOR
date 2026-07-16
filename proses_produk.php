@@ -48,8 +48,12 @@ if ($action === 'edit') {
     $status = $_POST['status'] === 'disewa' ? 'disewa' : 'tersedia';
 
     $res_lama  = mysqli_query($conn, "SELECT gambar FROM produk WHERE id=$id");
-    $row_lama  = mysqli_fetch_assoc($res_lama);
-    $gambar    = $row_lama['gambar'];
+    if ($res_lama) {
+        $row_lama  = mysqli_fetch_assoc($res_lama);
+        $gambar    = $row_lama['gambar'] ?? '';
+    } else {
+        $gambar    = '';
+    }
 
     if (!empty($_FILES['gambar']['name'])) {
         $ext     = strtolower(pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION));
@@ -88,8 +92,12 @@ if ($action === 'edit') {
 if ($action === 'hapus') {
     $id = (int) $_GET['id'];
     $res    = mysqli_query($conn, "SELECT gambar FROM produk WHERE id=$id");
-    $row    = mysqli_fetch_assoc($res);
-    $gambar = $row['gambar'] ?? '';
+    if ($res) {
+        $row    = mysqli_fetch_assoc($res);
+        $gambar = $row['gambar'] ?? '';
+    } else {
+        $gambar = '';
+    }
 
     if (mysqli_query($conn, "DELETE FROM produk WHERE id=$id")) {
         if ($gambar && file_exists('assets/images/' . $gambar) && strpos($gambar, '_') !== false) {
@@ -104,3 +112,4 @@ if ($action === 'hapus') {
 
 header('Location: kelola_produk.php');
 exit;
+?>

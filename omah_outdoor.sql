@@ -61,6 +61,7 @@ INSERT INTO `produk` (`nama_produk`, `harga_per_hari`, `status`, `gambar`) VALUE
 
 -- ============================================================
 -- Struktur tabel `orders`
+-- Tabel ini berelasi dengan `users` (user_id) dan `produk` (produk_id)
 -- ============================================================
 CREATE TABLE `orders` (
   `id`              int(11)    NOT NULL AUTO_INCREMENT,

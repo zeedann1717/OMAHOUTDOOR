@@ -170,3 +170,7 @@ OMAHOUTDOOR/
 - Muhammad Rasyid Murtadho
 - Arif Maulana Prastiya
 - Gesa Santiko Gumelar
+---
+<p align="center">
+  &copy; 2026 Omah Outdoor - Kelompok 6. All Rights Reserved.
+</p>

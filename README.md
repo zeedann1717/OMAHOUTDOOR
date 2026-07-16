@@ -165,7 +165,7 @@ OMAHOUTDOOR/
 ## 👥 Developed by Kelompok 6
 
 - Zidan Maulana
-- Bintang Putra D
-- M Rasyid Murtado
-- Arif Maulana
-- Gesa Santiko G
+- Bintang Putra Dinata
+- Muhammad Rasyid Murtadho
+- Arif Maulana Prastiya
+- Gesa Santiko Gumelar

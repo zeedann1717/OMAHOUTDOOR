@@ -23,13 +23,13 @@ if ($produk['status'] === 'disewa') {
 $error = $_GET['error'] ?? '';
 $pesan_error = '';
 if ($error === 'tanggal_kosong')
-    $pesan_error = 'Tanggal mulai dan selesai harus diisi!';
+    $pesan_error = 'Tanggal mulai dan selesai harus diisi bro!';
 elseif ($error === 'tanggal_salah')
     $pesan_error = 'Tanggal selesai harus setelah tanggal mulai!';
 elseif ($error === 'sudah_pesan')
     $pesan_error = 'Kamu sudah punya pesanan aktif untuk produk ini! Cek di Riwayat Order.';
 elseif ($error === 'gagal')
-    $pesan_error = 'Gagal menyimpan pesanan, coba lagi bre.';
+    $pesan_error = 'Gagal menyimpan pesanan, coba lagi bro.';
 ?>
 <!DOCTYPE html>
 <html lang="id">
